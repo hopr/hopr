@@ -108,7 +108,7 @@ class EventParser(object):
             self.press(key)
             self.release(key)
         else:
-            logging.debug('Unmapped chord: ' + str(self.pressed_keys[:i+1]))
+            logging.warning('Unmapped chord: ' + str(self.pressed_keys[:i+1]))
 
     def reset_key_event_counters(self):
         self.pressed_keys = []
@@ -123,7 +123,7 @@ class EventParser(object):
 
     def __call__(self, event):
         
-        logging.debug("EventParser: " + str(event))
+        logging.debug("EventParser: event=" + str(event))
         
         # On/Off mode
         if event.key == self.on_off_key:
