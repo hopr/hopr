@@ -1,3 +1,3 @@
 #!/bin/bash
 scriptdir=`dirname $0`
-xfce4-terminal -H -x bash -i -c "python $scriptdir/../khord -x"
+xfce4-terminal -H -x bash -i -c "python $scriptdir/../hopr -x"
