@@ -2,7 +2,7 @@
 A hold-and-press pseudo-chorded keyboard remapper.
 
 ## What is it?
-Hopr lets the user map certain key strokes, called chords, to any other set of keystrokes. The main goal is let the user do more without leving the home row, thereby reducing stress on the fingers and reducing the risk of Repetitive Strain Injuries (RSI). For example, the default configuration contains:
+Hopr lets the user map certain key strokes, called chords, to any other set of keystrokes. The main goal is let the user do more without leving the home row, thereby reducing stress on the fingers and reducing the risk of Repetitive Strain Injuries (RSI). For example, some of the mappings in the default configuration are:
 
 * The arrow keys can be accessed by holding SPACE and pressing J,K,L or SEMICOLON.
 * Move up paragraph (CTRL+UP) can be accessed by holding SPACE and pressing U. Similarly for I,O,P.
