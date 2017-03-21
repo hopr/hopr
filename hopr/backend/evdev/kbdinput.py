@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
-# -*- coding: utf-8 -*-
+
 import logging
 from select import select
 from evdev import list_devices, ecodes as e, InputDevice

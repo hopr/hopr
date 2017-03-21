@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
-# -*- coding: utf-8 -*-
+
 
 PRESS = 'PRESS'
 RELEASE = 'RELEASE'
