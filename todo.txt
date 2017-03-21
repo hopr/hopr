@@ -1,0 +1,117 @@
+! ToDo
+
+!! Prio 1
+
+# US keyboard layout
+# Remove duplicate coding:
+# kbdlayout: Symbols, summary, explanations etc.
+
+# No help text if no rw permissions on uinput and evdev. uinput and evdev are created/grabbed before arguments are parsed.    
+
+# Log level as cmd line argument
+## Clean up run script
+# Clean up notes
+# Write simple docs
+
+# Logging: Info vs debug etc.
+## Prevent accidental key logging. 
+
+# Convert notes.txt to md or rst
+
+!! Prio 2
+
+* Rename and rethink naming conventions. It's a mix between chords, shortcuts and physical keyboard remapping.
+** Physical key events -> detect chords (chord modifiers + chord key) -> map to new key events
+** Event - Chord - X
+
+# Alias for delete word backward, kill line forward etc
+# Cmd line option: Ignore/Send unrecognized chords. Default to send events?
+# Remove unexpected key release warning after some chords (unless it is actually unexpected)
+
+# x How to add global remap? Capslock -> bksp
+## HACK: Added as layer with empty key. Do something better
+
+# Log and analyze false positive chords (IX, NO). Log last N keystrokes befor delete was pressed?
+## Detect false positive chords.
+## Log time between key presses. Press->Press and Press->Release
+## Statistics. Average would not say much. Need time holding keys, pressing keys, typing speed etc.
+### Save histograms? 
+## Check if key press time is longer with hopr than without. May indicate the lag is causing harder pressing of keys which might be bad for fingers. 
+## Log both physical key presses and mapped key presses or symbols.
+### Map to symbol? Use dumpkeys?
+## Events per keyboard? Log physical and virtual keyboard separately?
+
+#  Repeat key events / hold key events
+## Special chord to do key repeats? X + A sends A until A is released. H (Hold) and G? Hold and bksp/del are probably most common but would be messy with H and G. 
+## Emacs style: 5 + X = XXXXX
+## - Timers? Probably optional functionality since it may be very annoying if key starts repeating before you press the chord key.
+
+# Mock back end for testing. Run tests against final setup
+## Need integration testing. hopr/integration_test.
+### Config file testing should be moved here...
+### System Testing: Test with signals etc on win and linux. Interrupts and various other exceptions.
+
+# Break chord. Holding spc to press a chord and then changing your mind send spc event.
+## Break key? Some other way to change your mind?
+## Could timers be used to improve usability? Probably just confusing. 
+
+# Integration testing
+# Safety check. What if two key press events right after each other? If key is already pressed, do not add it to pressed keys. Faulty keyboard or keyboard driver. 
+# --self-test Generate events and just verify it doesnt crash. Disable kbd output during test
+
+# Keyboard layout.
+# & used often when typing in shells.
+# Optional gray keys in kbdlayout
+
+
+!! Prio 3
+# Consider mapping CTRL+SHIFT to single key (like F)
+
+# Setup
+## Linux. Run with as limited privileges as possible. Prevent key logging.
+## Windows???
+# Config files and home directories
+## Default config file locations. Windows vs Linux standards for home directories etc
+
+# Empty keyboard layout pdf for manual testing.
+# kbdlayout testing. 
+
+* Modes: <X+a> starts chorded mode. Same as holding a
+
+# Typing with ALL CAPS is a bit difficult with shift on F and J.
+## Add caps lock?
+
+# Some chords seem very error prone, see current mapping of ; and  :.
+# Config is a bit confusing. Symbols, alias etc.
+
+* Mode. Pressing A+X starts mode x. Same as holding x.
+* Allow mapping of single chord to multiple key strokes.
+# Window operations. Tile left and right. 
+* Internationalization: How to handle multiple kbd geometries and layouts? Don't want duplicate work or support too much hardware. Rip layouts from linux? dumpkeys?
+
+* Meta Shift %
+** Note: Emacs uses LALT for meta and NOT RALT. So, Meta % = (LALT, SHIFT) + 5 which is very messy...
+** Current mapping would be CD+.
+
+* Create test app which sends keys on key up. Compare sluggishness.
+** Measure delay between key up and down. Compare to python execution time. (exec time should be insignificant)
+
+
+! Notes
+* Use dumpkeys to find keyboard keybindings on linux?
+
+Chord types:
+* The keyboard feels less responsive.
+** - After testing a bit, it isn't so bad. Just a bit unresponsive.
+** Possibly due to time lag since keys are sent upon release and not press.
+*** Measure average time between press/release and other statistics. Speed of algo compared to mechanical down->up time
+** I got used to it. Don't notice it anymore.
+
+* Current version delays/hijacks some keypresses until it can be determined if it was a key chord or not. Any hardware based device (like an arduino implementation) should have physical off switch to bypass.
+
+* - Use scan codes? Same on all keyboards with same physical layout (AZERTY and QWERTY but not hard wired DVORAK).
+** Figure out how windows works first. Then arduino via usb.
+
+* The standard shift keys must bypass any chording algo. Normal shift usage is to press shift, press key, release shift, release key.
+
+

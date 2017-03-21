@@ -1,0 +1,45 @@
+# -*- coding: utf-8 -*-
+
+# US Keyboard
+# Left  Right
+# 12345 67890-=
+# qwert yuiop{}
+# asdfg hjkl;'\
+# zxcvb nm,./
+
+# Map symbol to physical key combination. Physical key names are from US keyboard
+# TODO: DIY for now. Replace with something better...
+symbols: {'+': 'minus',
+          '-': 'slash',
+          '*': 'shift+backslash',
+          '/': 'shift+7',
+          '\': 'rightalt+minus',
+          '=': 'shift+0',
+          '(': 'shift+8',
+          ')': 'shift+9',
+          '[': 'rightalt+8',
+          ']': 'rightalt+9',
+          '{': 'rightalt+7',
+          '}': 'rightalt+0',
+          '<': '102nd',
+          '>': 'shift+102nd',
+          '|': 'rightalt+102nd',
+          '^': 'shift+rightbrace',
+          '_': 'shift+slash',
+          '$': 'rightalt+4',
+          '#': 'shift+3',
+          '!': 'shift+1',
+          '`': 'shift+equal',
+          '´': 'rightalt+backslash',
+          '@': 'rightalt+2',
+          '"': 'shift+2',
+          "'": 'backslash', 
+          '?': 'shift+minus',
+          '%': 'shift+5',
+          '~': 'rightalt+rightbrace',
+          '&': 'shift+6',
+          ':': 'shift+dot',
+          ';': 'shift+comma',
+          ',': 'comma',
+          '.': 'dot',
+          }

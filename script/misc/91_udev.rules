@@ -1,0 +1,4 @@
+# HACK: Relax security on keyboard devices for user in hopr group.
+# TODO: Review
+KERNEL=="event*", ENV{ID_INPUT_KEYBOARD}=="1", NAME="input/%k", GROUP="hopr", MODE="0660"
+KERNEL=="uinput*", GROUP="hopr", MODE="0666"

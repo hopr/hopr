@@ -1,0 +1,113 @@
+\documentclass[14pt]{scrartcl}
+
+\usepackage[a4paper, landscape, margin=2cm]{geometry}
+
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage{textcomp} % \textquotesingle
+
+\usepackage{tikz}
+\usetikzlibrary{positioning,shapes,shadows}
+
+\tikzstyle{keystyle}=[
+  rectangle,
+  rectangle split,
+  rectangle split parts=2,
+  draw=black,
+  rounded corners,
+  text centered,
+  text=black,
+]
+
+
+% \newcommand{\stdkeysize}{0.07\textwidth}
+\newlength{\stdkeysize}
+\setlength{\stdkeysize}{16mm}
+\newcommand{\stdkey}[3]{\keybox{#1}{#2}{#3}{\stdkeysize}}
+\newcommand{\spacekey}[1]{\keybox{SPC}{#1}{0}{6\stdkeysize}}
+
+\newcommand{\keybox}[4]{
+  \begin{tikzpicture}
+    % \node (Item) [keystyle, text width=#4, fill=gray!#3]
+    \node (Item) [keystyle, minimum width=#4, fill=gray!#3]    
+        {
+          % Could not get minimum height to work. Use vphantom instead.
+          \scriptsize{#1}\vphantom{\scriptsize{\{}}
+          \nodepart{second}
+          \texttt{#2}\vphantom{\texttt{\{} }
+          %% \textsc{#2}\vphantom{\textsc{\{} }
+        };
+  \end{tikzpicture}
+  \hspace{-6mm}
+}
+
+\newcommand{\keyverygood}[2]{\stdkey{#1}{#2}{0}}
+\newcommand{\keygood}[2]{\stdkey{#1}{#2}{20}}
+\newcommand{\keyok}[2]{\stdkey{#1}{#2}{40}}
+\newcommand{\keybad}[2]{\stdkey{#1}{#2}{60}}
+\newcommand{\keyverybad}[2]{\stdkey{#1}{#2}{80}}
+
+\begin{document}
+%% TODO: Layout is a bit unstable. Remake as a single tikzpicture.
+
+<% for layer in layers %>
+
+\parbox{\textwidth}{
+\noindent {\Huge Layer <<layer.name>> }
+
+\noindent
+\keyverybad{TAB}{<<layer.tab>>}
+\keybad{Q}{<<layer.q>>}
+\keygood{W}{<<layer.w>>}
+\keygood{E}{<<layer.e>>}
+\keyok{R}{<<layer.r>>}
+\keybad{T}{<<layer.t>>}
+\keyverybad{Y}{<<layer.y>>}
+\keyok{U}{<<layer.u>>}
+\keygood{I}{<<layer.i>>}
+\keygood{O}{<<layer.o>>}
+\keybad{P}{<<layer.p>>}
+\keyverybad{\{}{<<layer.leftbrace>>}
+\keyverybad{\}}{<<layer.rightbrace>>}
+
+\noindent
+\hspace{0.3\stdkeysize}
+\keybad{CAPS}{<<layer.capslock>>}
+\keyverygood{A}{<<layer.a>>}
+\keyverygood{S}{<<layer.s>>}
+\keyverygood{D}{<<layer.d>>}
+\keyverygood{F}{<<layer.f>>}
+\keyok{G}{<<layer.g>>}
+\keyok{H}{<<layer.h>>}
+\keyverygood{J}{<<layer.j>>}
+\keyverygood{K}{<<layer.k>>}
+\keyverygood{L}{<<layer.l>>}
+\keyverygood{;}{<<layer.semicolon>>}
+\keybad{'}{<<layer.apostrophe>>}
+\keyverybad{\textbackslash{}}{<<layer.backslash>>}
+
+\noindent
+\hspace{0.8\stdkeysize}
+\keyverybad{SHIFT}{<<layer.leftshift>>}
+\keybad{Z}{<<layer.z>>}
+\keybad{X}{<<layer.x>>}
+\keyok{C}{<<layer.c>>}
+\keygood{V}{<<layer.v>>}
+\keyverybad{B}{<<layer.b>>}
+\keyok{N}{<<layer.n>>}
+\keygood{M}{<<layer.m>>}
+\keyok{,}{<<layer.comma>>}
+\keybad{.}{<<layer.dot>>}
+\keybad{/}{<<layer.slash>>}
+\keyverybad{SHIFT}{<<layer.rightshift>>}
+
+%% \hspace{3\stdkeysize}
+%% \keybad{LALT}{<<layer.leftalt>>}
+%% \spacekey{<<layer.space>>}
+%% \keybad{RALT}{<<layer.rightalt>>}
+
+} %% End of parbox
+
+<% endfor %>
+
+\end{document}

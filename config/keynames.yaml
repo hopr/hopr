@@ -1,0 +1,17 @@
+# NOTE: physical key names must match evdev for now but lowercase and without KEY_. Example: KEY_LEFTCTRL is referred to as leftctrl
+
+# TODO: Clean up and remove most aliases
+alias:
+  ctrl: leftctrl
+  control: leftctrl
+  super: leftmeta
+  shift: leftshift
+  alt: leftalt
+  del: delete
+  bksp: backspace
+  return: enter
+  # delete-word: leftctrl+delete
+  # bksp-word: leftctrl+backspace
+  # delete-line: leftctrl+leftshift+delete
+  # bksp-line: leftctrl+leftshift+backspace
+

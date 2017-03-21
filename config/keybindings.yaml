@@ -1,0 +1,72 @@
+# -*- coding: utf-8 -*-
+
+on_off: pause
+
+# TODO: Rename. Something more general like key remap. Isn't it just general key remap?
+# Map keys as additional modifiers.
+modifiers:
+  f: leftshift
+  j: rightshift
+  v: leftctrl
+  m: rightctrl
+  c: leftalt
+  # NOTE: Use leftalt instead of rightalt since rightalt == alt gr on international keyboards. Different uses.
+  comma: leftalt
+  x: leftmeta
+  dot: rightmeta
+  capslock: bksp
+  
+# Passthrough keys: All key events are passed on without chord parsing.
+passthrough:
+  - leftshift
+  - rightshift
+  - leftalt
+  - rightalt
+  - leftctrl
+  - rightctrl
+  - leftmeta
+  - rightmeta
+
+# TODO: Key remap 
+# key_map: {capslock: bksp}
+
+# Layers: Map chords to physical key strokes. The chords are divided into layers based on the primary chord key
+# Example: The line "space: {j: down, k: up}" maps the chord "space+j" to "up" and "space+k" to "down"
+
+
+layers:
+  # HACK: Key remap. 
+  '': {capslock: bksp}
+  
+  # Movement and editing  
+  space: { # Left Hand
+         tab:,      q: ctrl+shift+bksp,     w: ctrl+shift+del,      e: ctrl+bksp, r: ctrl+del, t:,
+         capslock:, a:,                     s:,                     d: bksp,      f: del,      g:,
+         shift:,    z:,                     x: cut,                 c: copy,      v: paste,    b:,
+         # Right Hand
+         y:,        u: ctrl+down, i: ctrl+up,    o: ctrl+left,  p: ctrl+right,    leftbrace:,  rightbrace:,
+         h: return, j: down,      k: up,         l: left,       semicolon: right, apostrophe:, return:,
+         n: tab,    m: pagedown,  comma: pageup, dot: home,     slash: end}
+
+  # Symbols
+  k: { tab:,      q: '=', w: '*', e: '/', r: '\', t: '|',
+       capslock:, a: "'", s: '"', d: '_', f: '-', g: '+',
+       shift:,    z: '^', x: '~', c: '#', v: '@', b: '&'}
+     
+  d: {y: '$', u: '[', i: ']',     o: '{',   p: '}',         leftbrace: '',  rightbrace: '',
+      h: '',  j: '(', k: ')',     l: '<',   semicolon: '>', apostrophe: '', return: '',
+      n: '!', m: '?', comma: ';', dot: ':', slash: '%'}
+
+  # Numeric
+  s: {y: '+',  u: '7', i: '8',     o: '9',    p: ':',        leftbrace: ';',  rightbrace: '',
+      h: '-', j: '4', k: '5',     l: '6',    semicolon: '.', apostrophe: ',', return: '',
+      n: '0', m: '1', comma: '2', dot: '3',  slash: ''}
+
+  # Window operations. TODO: Add Alt+F4 or Alt+F10? How standard are they?
+  u: {e: ctrl+shift+tab, r: ctrl+tab,
+      d: alt+shift+tab, f: alt+tab}
+      
+ 
+    
+
+

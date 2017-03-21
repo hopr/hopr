@@ -1,0 +1,11 @@
+Version 4
+
+Solves the following issues:
+* Multiple chord modifiers <x+y> + a
+* Merging of modifiers for repeated key presses. Alt+Tab Alt+Tab = Alt+Tab+Tab
+* Regular / ignored keys. Shift events are never processed as part of a chord.
+
+Notes:
+* Event order is not preserved.
+* Hold events are ignored
+
