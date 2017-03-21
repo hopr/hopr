@@ -48,8 +48,8 @@ The main goal is to avoid repetitive strain for heavy keyboard users by reducing
 * Map common key combinations such as CTRL+UP or SHIFT+ALT+TAB to a single key chord. 
 
 ### Cons
-* Currently, HOLD key events are ignore. Holding a key does not trigger key repeat.
-* Both key press and release events are not sent until the key is released. This gives a slight lag which at first makes the keyboard feel sluggish. I got used to it after a while though.
+* Currently, HOLD key events are ignored. Holding a key does not trigger key repeat.
+* Both key press and release events are not sent until the key is released. This gives a slight lag which at first makes the keyboard feel sluggish. I got used to it after a while.
 * There are still some false-positives. Further testing is needed to see how, when and why they occur. 
 * Key event order is not preserved. For example, Press A, Press B, Release A, Release B will be parsed as Press A, Release A, Press B, Release B
 
