@@ -2,6 +2,8 @@
 
 !! Prio 1
 
+# Set keyboard devide /dev/input/event* or keyboard matching pattern in config.
+
 # US keyboard layout
 # Remove duplicate coding:
 # kbdlayout: Symbols, summary, explanations etc.

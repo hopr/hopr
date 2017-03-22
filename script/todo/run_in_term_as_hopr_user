@@ -1,0 +1,5 @@
+#!/bin/bash
+scriptdir=$(dirname `realpath $0`)
+xfce4-terminal -H -x bash -c "sudo -u hopr python $scriptdir/../hopr -x"
+
+

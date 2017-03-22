@@ -43,13 +43,13 @@ log.addHandler(logging.StreamHandler())
 
 from functools import partial
 
-from hopr.tool import config
-from hopr.backend import evdev
+from tool import config
+from backend import evdev
 
 
 # TODO: Rename run.py to something more descriptive
-from hopr.tool.run import Run
-from hopr.v04 import eventparser, keymap
+from tool.run import Run
+from v04 import eventparser, keymap
 
 
 from pprint import pprint
