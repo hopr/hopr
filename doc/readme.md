@@ -2,17 +2,17 @@
 A pseudo-chorded keyboard remapper.
 
 ## What is it?
-Hopr lets the user map certain key sequences, called chords, to other keystrokes. The main goal is reduce stress on the hands and fingers by moving hard to reach keys and key combinations to more central positions. All common keyboard actions such as movement, editing, typing etc can be reached without leaving the home row. For example, some of the mappings in the default configuration are:
+Hopr lets the user map certain key sequences, called chords, to other keystrokes. The main goal is to reduce stress on the hands and fingers by moving hard to reach keys and key combinations to more central positions. All common keyboard actions such as movement, editing, typing etc can be reached without leaving the home row. For example, some of the mappings in the default configuration are:
 
 * The arrow keys can be accessed by holding `SPACE` and pressing `J,K,L` or `SEMICOLON`. 
 * Move up paragraph (`CTRL+UP`) can be accessed by holding `SPACE` and pressing `U`. Similarly for `I,O,P`.
 * `V` and `M` are mapped as additional `CTRL` keys. That is, holding `M` and pressing `X` is the same as pressing `CTRL+X`
 
-It works by distinguishing between sequential key presses and hold-and-press key events called chords. For example, during fast normal typing of the characters `AB` the following key events may be created:
+It works by distinguishing between sequential key presses and Hold-and-Press key events called chords. For example, during normal typing of the characters `AB` the following key events may be created:
 
     <PRESS A> <PRESS B> <RELEASE A> <RELEASE B>
 
-Note that the `B` key is often pressed before the `A` key is released but `A` is released before `B`
+Note that the `B` key is often pressed before the `A` key is released. This is OK since most programs only pay attention to press events.
 
 A key stroke is considered a chord if two keys are pressed and the second key is released before the first. For example, pressing and holding B and then pressing and releasing A is detected as a chord and can be mapped to another key stroke:
 
@@ -20,10 +20,29 @@ A key stroke is considered a chord if two keys are pressed and the second key is
     
 Therefore, typing `SIM` the usual way results in the text `sim` but holding `S` and typing `IM` gives the numbers `81`.
 
-### Default Keybindings
-The current default key bindings are here: [kbdlayout.pdf](doc/kbdlayout.pdf)
+### Features
 
-The keybindings are split into layers named by the activation keys. The default key bindings have two activation keys for each layer, one for the left hand and one for the right. The symbols or actions on the right hand side are activated by holding the activation key on the left hand side. For example, hold D and press J to create a left parenthesis.
+Hopr relies on the order of press and release events to distinguish between normal key strokes and chords. Hopr is not a chorded keyboard in the traditional sense since the order of the key press and release events is important. 
+
+* Keyboard can be used almost like normal. No changes in default keyboard layout or behavior.
+* Any key can be used as a modifier. 
+* Any pair of keys can be mapped to a different key or set of keys. 
+* Ergonomic key bindings. Map common shortcuts such as up-paragraph or delete-word to easy to reach positions. Fingers never leave the home row. 
+* Layers group common operations together. For example, `SPACE` for movement and editing, `S` for entering numbers.
+* Fewer false positives for fast typists than chorded approaches using timers.
+* Reduce stress on the little finger by remapping shift, control, enter etc to the much stronger index finger.
+
+### Side Effects
+
+* Key press and release events are not sent until the key is released. This gives a slight lag which at first makes the keyboard feel sluggish.
+* Key event order is not preserved. For example, Press A, Press B, Release A, Release B will be parsed as Press A, Release A, Press B, Release B
+* There are still some false-positives. Further testing is needed to see when and why they occur it if further improvements can be made.
+* Some chords such as `D+DOT` seem more error prone than others. Key bindings must be evaluated further.
+
+### Default Key bindings
+The current default key bindings are here [pdf](doc/kbdlayout.pdf) or here [keybindings.yaml](config/keybindings.yaml).
+
+The key bindings are split into layers named by the activation keys. The default key bindings have two activation keys for each layer, one for the left hand and one for the right. The symbols or actions on the right hand side are activated by holding the activation key on the left hand side. For example, hold D and press J to create a left parenthesis.
 
 It is possible to create chords using only the left or right hand but most combinations would be very unergonomic. 
 
@@ -35,9 +54,25 @@ Hopr is currently in a working Linux-only prototype stage. It works but little e
 * Use it and evaluate:
   * If the algorithm works as expected
   * What needs improvement (false-positives etc)
-  * If the Hold and Press behaviour becomes natural over time
-  * If the keybindings are good enough or need modifications.
+  * If the Hold and Press behavior becomes natural over time
+  * If the key bindings are good enough or need modifications.
 * Write a Windows or arduino port so I can use it everywhere.
+
+
+
+## Motivation
+The main goal is to avoid repetitive strain injuries (RSI) for heavy keyboard users by reducing the load on the weakest fingers. The inspiration came from chorded key mappers such as [key-chord](https://www.emacswiki.org/emacs/KeyChord) for Emacs. Many chorded key mappers use a timer to distinguish between chords and normal key strokes. For a fast typist it can be difficult to find the right time interval which is long enough to be usable but short enough not to produce false-positive chords. 
+
+Inspiration for the keyboard layout came from both ergonomic keyboards such as the [Kinesis Advantage](https://www.kinesis-ergo.com/shop/advantage2/) where the thumb is used for many modifier keys and ergonomic keyboard layouts such as [Neo](https://neo-layout.org/index_en.html) which use multiple modifiers to access more keys from the home row.
+
+The disadvantage with large ergonomic keyboards is that they make my laptop much less portable and the disadvantage with most keyboard layouts is that they all keep the unergonomic positions of many frequently used keys such as `CONTROL`, `SHIFT`, `DELETE` etc.
+
+My main goals with Hopr are:
+
+* Ergonomic usage. Reduce use of little finger and hand movements in general to minimize the risk of RSI.
+* Transparent usage. All keys should also work as normal. No change in default layout or use. 
+* Usable almost everywhere. Both laptops and desktops. In the future, also without installation using a physical box.
+* Low level. Allow for use without installation by implementing an Arduino version and creating a USB box that can be plugged in between keyboard and computer. This is on the very distant future wish list.
 
 ## Installation
 
@@ -76,35 +111,6 @@ This approach gives your own user the right to read and write key events. This i
 
 To avoid giving read and write permissions to your own user, create a new user and follow the steps above to give it the proper permissions. Then run the program as the new user. This is the safest way to run the program since your logged in user does not have the right to read or write keyboard events.
 
-See ·[create_hopr_user.example](script/misc/create_hopr_user.example) for an example.
+See [create_hopr_user.example](script/misc/create_hopr_user.example) for an example.
 
 
-## Motivation
-The main goal is to avoid repetitive strain for heavy keyboard users by reducing the load on the weakest fingers. The inspiration came from chorded key mappers such as [key-chord](https://www.emacswiki.org/emacs/KeyChord) for emacs. Many of the chorded the chorded key mappers use a timer to distinguish between chords and normal key strokes. For a fast typist it can be difficult to find the right time interval which is long enough to be usable but short enough not to produce false-positive chords. Instead of using a timer, Hopr relies on the order of press and release events to distinguish between normal key strokes and chords. Strictly speaking, Hopr isn't using chords in the traditional sense since the order of the key press and release events is important. 
-
-### Pros
-* Fewer false positives for fast typists than approaches using timers.
-* Map common shortcuts such as up-paragraph or delete-word to a single chord. 
-* Group layers based on usage such as `SPACE` for movement and editing, `S` for entering numbers.
-* Fingers never leave the home row. 
-* Reduce stress on the little finger by remapping shift, control, enter etc to the much stronger index finger.
-* Map common key combinations such as `CTRL+UP` or `SHIFT+ALT+TAB` to a single key chord. 
-
-### Cons
-* Currently, HOLD key events are ignored. Holding a key does not trigger key repeat.
-* Both key press and release events are not sent until the key is released. This gives a slight lag which at first makes the keyboard feel sluggish. I got used to it after a while.
-* There are still some false-positives. Further testing is needed to see how, when and why they occur. 
-* Key event order is not preserved. For example, Press A, Press B, Release A, Release B will be parsed as Press A, Release A, Press B, Release B
-
-
-### To do
-
-Main items:
-
-* Repeat key functionality
-* Windows port
-* Docs, setups, testing etc
-
-In the far future:
-
-* Arduino port. Create a box you can plug in between the keyboard and computer. 
