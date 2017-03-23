@@ -1,5 +1,5 @@
 # Set uinput group and mode
-KERNEL=="uinput*", GROUP="uinput", MODE="0666"
+KERNEL=="uinput*", GROUP="uinput", MODE="0660"
 
 # Set /dev/input/event* group if necessary
 # KERNEL=="event*", ENV{ID_INPUT_KEYBOARD}=="1", NAME="input/%k", GROUP="input", MODE="0660"
