@@ -2,10 +2,13 @@
 A pseudo-chorded keyboard remapper.
 
 ## What is it?
-Hopr lets the user map certain key sequences, called chords, to other keystrokes. The main goal is to reduce stress on the hands and fingers by moving hard to reach keys and key combinations to more central positions. All common keyboard actions such as movement, editing, typing etc can be reached without leaving the home row. For example, some of the mappings in the default configuration are:
+Hopr is an attempt at creating a more ergonomic keyboard experience by adding a special type of key stroke called chords. Hopr distinguishes between ordinary typing, where the first key is typically released before the second, and chords where the first key is held and the second key is released before the first. Chords can then be mapped to any other key sequence such as arrow `UP` or `CTRL+DEL`.
+
+The main goal is to reduce stress on the hands and fingers by moving hard to reach keys and key combinations to more central positions. All common keyboard actions such as movement, editing, typing etc can be reached without leaving the home row. For example:
 
 * The arrow keys can be accessed by holding `SPACE` and pressing `J,K,L` or `SEMICOLON`. 
-* Move up paragraph (`CTRL+UP`) can be accessed by holding `SPACE` and pressing `U`. Similarly for `I,O,P`.
+* Move up/down paragraph and forward/back word can be accessed by holding `SPACE` and pressing `U,I,O` or `P`.
+* Page up/down and Home/End are accessed by holding `SPACE` and pressing `M,COMMA,DOT` or `SLASH`.
 * `V` and `M` are mapped as additional `CTRL` keys. That is, holding `M` and pressing `X` is the same as pressing `CTRL+X`
 
 It works by distinguishing between sequential key presses and Hold-and-Press key events called chords. For example, during normal typing of the characters `AB` the following key events may be created:
@@ -14,15 +17,15 @@ It works by distinguishing between sequential key presses and Hold-and-Press key
 
 Note that the `B` key is often pressed before the `A` key is released. This is OK since most programs only pay attention to press events.
 
-A key stroke is considered a chord if two keys are pressed and the second key is released before the first. For example, pressing and holding B and then pressing and releasing A is detected as a chord and can be mapped to another key stroke:
+A key stroke is considered a chord if two keys are pressed and the second key is released before the first. For example, pressing and holding A and then pressing and releasing B is detected as the chord `A+B` and can be mapped to another key stroke:
 
     <PRESS A> <PRESS B> <RELEASE B> <RELEASE A> -> chord A+B
     
 Therefore, typing `SIM` the usual way results in the text `sim` but holding `S` and typing `IM` gives the numbers `81`.
 
-### Features
+Hopr relies on the order of press and release events to distinguish between normal key strokes and chords. Hopr is not a chorded keyboard in the traditional sense since the order of the key press and release events is important. The order of the held keys is not important though and `AB` and pressing `C` is the same as holding `BA` and pressing `C`. 
 
-Hopr relies on the order of press and release events to distinguish between normal key strokes and chords. Hopr is not a chorded keyboard in the traditional sense since the order of the key press and release events is important. 
+### Features
 
 * Keyboard can be used almost like normal. No changes in default keyboard layout or behavior.
 * Any key can be used as a modifier. 
