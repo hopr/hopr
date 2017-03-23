@@ -2,6 +2,10 @@
 
 !! Prio 1
 
+# SPACE+z for undo
+# Default to sending events for unrecognized chords.
+## Add config switch.
+
 # Set keyboard devide /dev/input/event* or keyboard matching pattern in config.
 
 # US keyboard layout
