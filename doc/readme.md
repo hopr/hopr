@@ -76,7 +76,7 @@ This approach gives your own user the right to read and write key events. This i
 
 To avoid giving read and write permissions to your own user, create a new user and follow the steps above to give it the proper permissions. Then run the program as the new user. This is the safest way to run the program since your logged in user does not have the right to read or write keyboard events.
 
-See ()[script/misc/create_hopr_user.example] for an example.
+See (create_hopr_user.example)[script/misc/create_hopr_user.example] for an example.
 
 
 ## Motivation
