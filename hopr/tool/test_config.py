@@ -185,7 +185,9 @@ class TestConfig(ut.TestCase):
         
         self.assert_(type(a.on_off) is str)
 
-               
+    def test3_load_app_config(self):
+        a = self.config.app
+        self.assert_(isinstance(a.send_unknown_chord, bool))
 
 
 

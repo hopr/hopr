@@ -18,6 +18,62 @@
 
 import logging
 
+class VirtualKeyboard(object):
+    def __init__(self, device):
+        self.device = device
+        self.reset()
+
+    def reset(self):
+        self.press_count = 0
+        self.release_count = 0
+        self.synced = True
+        self.pressed_modifiers = set()
+
+    def set_modifiers(self, current):
+        """
+        Releases modifiers which are no longer pressed and press new modifiers.
+        Update list of pressed modifiers.
+        """
+        current = set(current)
+        
+        last = self.pressed_modifiers        
+        for mod in sorted(last - current):
+            self.release(mod)
+
+        for mod in sorted(current - last):
+            self.press(mod)
+
+        if last != current:
+            self.pressed_modifiers = current
+            self.synced = False
+
+
+    def send(self, event):
+        if event.is_press():
+            self.press(event.key)
+        elif event.is_release():
+            self.release(event.key)
+        else:
+            raise ValueError('Unexpected event type:' + str(event))
+
+    def press(self, key):
+        self.press_count += 1
+        self.device.press(key)
+        self.synced = False
+
+    def release(self, key):
+        self.release_count += 1
+        self.device.release(key)
+        self.synced = False        
+
+    def sync(self):
+        if not self.synced:
+            self.device.sync()
+            self.synced = True
+
+
+
+
 class EventParser(object):
     """
     Parses keyboard events and detects chord shortcuts.
@@ -34,61 +90,35 @@ class EventParser(object):
                  kbd,
                  on_off_key,
                  passthrough_keys,
+                 send_unknown_chord=True,
                  ):
         
         self.key_map = key_map
-        self.kbd = kbd
+        self.kbd = VirtualKeyboard(kbd)
         self.on_off_key = on_off_key
         self.passthrough_keys = set(passthrough_keys)
+        self.send_unknown_chord = send_unknown_chord
         
         self.is_on = True        
         self.reset()
 
-    def send(self, event):
-        if event.is_press():
-            self.press(event.key)
-        elif event.is_release():
-            self.release(event.key)
-        else:
-            raise ValueError('Unexpected event type:' + str(event))
+    # Only used from init and on_off
+    def reset(self):
+        # NOTE: is_on must not be reset.
+        self.kbd.reset()
 
-    def press(self, key):
-        self.kbd.press(key)
-        self.synced = False
-
-    def release(self, key):
-        self.kbd.release(key)
-        self.synced = False
+        # pressed_keys: Keeps track of the press key events which have not yet been sent. 
+        self.pressed_keys = []
+        # cmods_idx: keeps track of the index of the last released key.
+        #     It is used to detect when a chord modifier is released.
+        #     All pressed keys with i < cmods_idx are chord modifiers.
+        #     Pressed keys with i > cmod_idx are not yet classified
+        self.cmods_idx = 0
 
 
-    def _update_modifiers(self, current_modifiers=()):
+    def _send_key_events(self, i):
         """
-        Releases modifiers which are no longer pressed and press new modifiers.
-
-        Update list of pressed modifiers.
-        """
-        last = self.last_modifiers
-        current = current_modifiers
-
-        for mod in sorted(last - current):
-            self.release(mod)
-
-        for mod in sorted(current - last):
-            self.press(mod)
-
-        if last != current:
-            self.last_modifiers = current
-            self.synced = False
-        
-
-    def sync(self):
-        if not self.synced:
-            self.kbd.sync()
-            self.synced = True
-
-    def _release_key(self, i):
-        """
-        Handle release of the i:th key.
+        Handle release of the i:th key.        
         """
         mapped = self.key_map(self.pressed_keys, i)
         logging.debug('Sending: ' + str(mapped))
@@ -98,67 +128,74 @@ class EventParser(object):
         else:
             (mods, key) = ((), None)
 
-        mods = set(mods)
-        if mods != self.last_modifiers:
-            # If modifiers have changed since last key press:
-            #       release old and press new
-            self._update_modifiers(mods)
+        # Handle changes in output modifer keys
+        self.kbd.set_modifiers(mods)
 
         if key is not None:
-            self.press(key)
-            self.release(key)
+            self.kbd.press(key)
+            self.kbd.release(key)
+            del self.pressed_keys[i]
+            self.cmods_idx = i
         else:
-            logging.warning('Unmapped chord: ' + str(self.pressed_keys[:i+1]))
+            logging.info('Unknown chord: ' + str(self.pressed_keys[:i+1]))
+            if self.send_unknown_chord:
+                key = self.pressed_keys[i]
+                # NOTE: Empties the pressed_keys queue
+                self._send_all_pressed_keys()
+                self.kbd.release(key)
+            else:                
+                # Unrecognized chord is silently ignored. No events are sent.
+                del self.pressed_keys[i]
+                self.cmods_idx = i
 
-    def reset_key_event_counters(self):
+    def _send_all_pressed_keys(self):
+        for key in self.pressed_keys:
+            self.kbd.press(key)
+
         self.pressed_keys = []
-        self.last_released_idx = 0
-        self.last_modifiers = set()
-
-    def reset(self):
-        # NOTE: is_on is not reset
-        self.reset_key_event_counters()
-        self.synced = True
-        self.passthrough_key_is_pressed = False
-
-    def __call__(self, event):
+        self.cmods_idx = 0
+        self.kbd.sync()
         
-        logging.debug("EventParser: event=" + str(event))
-        
-        # On/Off mode
+
+    def handle_on_off(self, event):
         if event.key == self.on_off_key:
             if event.is_press():
                 self.reset()
                 self.is_on = not self.is_on
                 state = 'ON' if self.is_on else 'OFF'
                 logging.info('Chording is ' + state)
-            return
+            return True
+        else:
+            return False
 
-        if not self.is_on:
-            self.send(event)
-            self.sync()
-            return
-
-
-        # Passthrough keys
+    def handle_passthrough_keys(self, event):
+        """
+        Passthrough keys events are sent immediately without further processing. 
+        All press key events are sent to preserve event order as much as possible.
+        Used for scenario 'press shift press a release shift release a'
+        """
         if event.key in self.passthrough_keys:
-            if event.is_press():
-                self.passthrough_key_is_pressed = True
-                # Send pressed keys and clear queue
-                for key in self.pressed_keys:
-                    self.press(key)
-                self.reset_key_event_counters()
-                self.sync()
-            elif event.is_release():
-                self.passthrough_key_is_pressed = False
-                # Prevent unneccesary key release warning
-                self.send(event)
-                self.sync()
-                return
+            self._send_all_pressed_keys()
+            self.kbd.send(event)
+            self.kbd.sync()
+            return True
+        else:
+            return False
 
-        if self.passthrough_key_is_pressed:
-            self.send(event)
-            self.sync()
+
+    def __call__(self, event):
+        logging.debug("EventParser: event=" + str(event))
+        
+        if self.handle_on_off(event):
+            return
+        
+        if not self.is_on:
+            # Chording is turned off. Send events without parsing.
+            self.kbd.send(event)
+            self.kbd.sync()
+            return
+
+        if self.handle_passthrough_keys(event):
             return
 
         # Chord parsing
@@ -168,26 +205,28 @@ class EventParser(object):
             try:
                 i = self.pressed_keys.index(event.key)
             except ValueError:
-                # Unexpected key release
-                logging.warning('Unexpected key release: ' + str(event))
-                self.release(event.key)
-                self.sync()
+                # HACK: Both passthrough keys and unrecognized chords empty the pressed_keys queue. Check counters to verify there have been more press events than release events
+                if self.kbd.press_count <= self.kbd.release_count:
+                    # Unexpected key release
+                    logging.warning('Unexpected key release: ' + str(event))
+                    
+                self.kbd.release(event.key)
+                self.kbd.sync()
                 return
 
-            if i < self.last_released_idx:
-                # Released key was part of a chord modifier.                    
-                self.last_released_idx -= 1
+            if i < self.cmods_idx:
+                # Released key was part of a chord modifier. Do not send release event. 
+                self.cmods_idx -= 1
+                del self.pressed_keys[i]
             else:
-                self._release_key(i)
-                self.last_released_idx = i
+                # Released key was a chord key or a regular key
+                self._send_key_events(i)
 
-            del self.pressed_keys[i]
+            if self.cmods_idx == 0:
+                # Last chord modifier was released. Send release events for all held modifier events.
+                self.kbd.set_modifiers(current=())
 
-            if self.last_released_idx == 0:
-                # Last chord mofifier was released. Send all held modifier events.
-                self._update_modifiers(set())
-
-            self.sync()
+            self.kbd.sync()
         else:
             raise ValueError('Unexpected event type: ' + str(event))
 

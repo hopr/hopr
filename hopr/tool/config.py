@@ -158,22 +158,32 @@ def load_keyboard_layout(path, key_names):
     
     return KeyboardLayout(symbols=symbols)    
 
+ApplicationConfig = namedtuple('ApplicationConfig', 'send_unknown_chord'.lower().split())
+def load_application(path):
+    app = yaml.load(open(path, 'rb'))
+    return ApplicationConfig(**app)
 
-Config = namedtuple('Config', 'key_names keyboard_layout key_bindings'.lower().split())
+Config = namedtuple('Config', 'app key_names keyboard_layout key_bindings'.lower().split())
 def load_config(config_dir,
+                application_path=None,
                 key_names_path=None,
                 keyboard_layout_path=None,
                 key_bindings_path=None):
 
-    key_names_path = os.path.join(config_dir, key_names_path or 'keynames.yaml')
-    keyboard_layout_path = os.path.join(config_dir, keyboard_layout_path or 'layout/se.yaml')
-    key_bindings_path = os.path.join(config_dir, key_bindings_path or 'keybindings.yaml')
+    app_path = os.path.join(config_dir, application_path or 'application.yaml')
+    app_config = load_application(app_path)
 
+    key_names_path = os.path.join(config_dir, key_names_path or 'keynames.yaml')
     key_names = load_key_names(key_names_path)
+
+    keyboard_layout_path = os.path.join(config_dir, keyboard_layout_path or 'layout/se.yaml')
     keyboard_layout = load_keyboard_layout(keyboard_layout_path, key_names)
+
+    key_bindings_path = os.path.join(config_dir, key_bindings_path or 'keybindings.yaml')
     key_bindings = load_key_bindings(key_bindings_path, keyboard_layout.symbols, key_names)
 
-    return Config(key_names=key_names,
+    return Config(app=app_config,
+                  key_names=key_names,
                   keyboard_layout=keyboard_layout,
                   key_bindings=key_bindings)
 

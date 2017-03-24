@@ -2,6 +2,9 @@
 
 !! Prio 1
 
+# Unexpected key releases:
+## passthrough keys and "send unknown chord" sends press key events and clears list of passed_keys. Makes it impossible to later match released key events. 
+
 # x SPACE+z for undo
 # Default to sending events for unrecognized chords.
 ## Add config switch.
@@ -26,6 +29,8 @@
 
 !! Prio 2
 
+* Convert todo list to md
+
 * Check out some projects:
 ** Hook global events, register hotkeys, simulate key presses and much more.
 *** https://github.com/boppreh/keyboard
@@ -40,6 +45,10 @@
 * Rename and rethink naming conventions. It's a mix between chords, shortcuts and physical keyboard remapping.
 ** Physical key events -> detect chords (chord modifiers + chord key) -> map to new key events
 ** Event - Chord - X
+
+
+
+
 
 # Alias for delete word backward, kill line forward etc
 # Cmd line option: Ignore/Send unrecognized chords. Default to send events?

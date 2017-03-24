@@ -19,7 +19,7 @@
 import unittest as ut
 import mock
 from hopr.tool.mockevent import Event, parse_events
-from hopr.v04.eventparser import EventParser
+from hopr.v04.eventparser import EventParser, logging
 
 from keymap import KeyMap
 from hopr.tool.tools import pretty_key
@@ -132,7 +132,9 @@ class Test1EventParser(ut.TestCase):
         map(self.parser, parse_events('px py pb rb ry rx'))
         self.assertEqual('pq rq s', self.kbd.events)
 
-    def test25_missing_key_map(self):
+    @mock.patch('hopr.v04.eventparser.logging.warning', autospec=True)
+    def test25_missing_key_map(self, warn):
+        self.parser.send_unknown_chord = False
         self.parser.key_map.side_effect = lambda p, r: ((), None)
         map(self.parser, parse_events('px pa ra rx'))
         self.assertEqual('', self.kbd.events)
@@ -156,11 +158,14 @@ class Test1EventParser(ut.TestCase):
         map(self.parser, parse_events('pb rb rx'))
         self.assertEqual('pm pn pq rq s rn pr rr s rm s', self.kbd.events)
 
-    def test41_missing_key_mapping(self):
+    @mock.patch('hopr.v04.eventparser.logging.info', autospec=True)
+    def test41_missing_key_mapping(self, warn):
+        self.parser.send_unknown_chord = False
         self.parser.key_map.return_value = ()
 
         map(self.parser, parse_events('pa ra'))
         self.assertEqual('', self.kbd.events)
+        warn.assert_called_once_with("Unknown chord: ['A']")
 
     @mock.patch('hopr.v04.eventparser.logging.warning', autospec=True)
     def test42_unexpected_release_event_is_passed_on_and_logged(self, warn):
@@ -199,15 +204,12 @@ class Test1EventParser(ut.TestCase):
         self.assertEqual('pa s ra s pq rq s', self.kbd.events)
         warn.assert_called_once_with('Unexpected key release: RELEASE A')
 
-    @mock.patch('hopr.v04.eventparser.logging.warning', autospec=True)
-    def test81_passthrough_keys(self, warn):
+    def test81_passthrough_keys(self):
         self.parser.key_map.side_effect = return_chord
         
         self.parser.passthrough_keys = set('shift'.upper().split())
         map(self.parser, parse_events('pshift pa rshift pb rb ra'))
         self.assertEqual('pshift s pa s rshift s pb rb s ra s', self.kbd.events)
-        warn.assert_called_once_with('Unexpected key release: RELEASE A')
-
 
     def test82_passthrough_modifier_and_key(self):
         self.parser.key_map.side_effect = return_chord
@@ -216,16 +218,27 @@ class Test1EventParser(ut.TestCase):
         map(self.parser, parse_events('pa pshift ra rshift pb rb'))
         self.assertEqual('pa s pshift s ra s rshift s pb rb s', self.kbd.events)
 
+    @mock.patch('hopr.v04.eventparser.logging.info', autospec=True)
+    def test9_do_not_send_unrecognized_chord(self, warn):
+        self.parser.send_unknown_chord = False
+        self.parser.key_map.return_value = None 
         
-    # @mock.patch('hopr.v04.eventparser.logging.warning', autospec=True)
-    # def test82_passthrough_keys_again(self, warn):
-    #     self.parser.key_map.return_value = ((), 'Q')
+        map(self.parser, parse_events('pa pb rb ra'))
+        self.assertEqual('', self.kbd.events)
+        warn.assert_called_once_with("Unknown chord: ['A', 'B']")
+
+
+    @mock.patch('hopr.v04.eventparser.logging.info', autospec=True)
+    def test91_do_send_unrecognized_chord(self, info):
+        self.parser.send_unknown_chord = True
+        self.parser.key_map.return_value = None 
         
-    #     self.parser.passthrough_keys = set('shift ctrl'.upper().split())
-    #     map(self.parser, parse_events('pesc pa resc pesc ra pa pb resc rb ra'))
-    #     self.assertEqual('pa s ra s pb rb s', self.kbd.events)
-    #     warn.assert_called_once_with('Unexpected key release: RELEASE A')
-        
+        map(self.parser, parse_events('pa pb rb'))        
+        self.assertEqual('pa pb s rb s', self.kbd.events)
+
+        self.parser(Event('ra'))
+        self.assertEqual('pa pb s rb s ra s', self.kbd.events)
+        info.assert_called_once_with("Unknown chord: ['A', 'B']")
 
 
 
@@ -257,9 +270,11 @@ class Test2EventParserWithKeyMap(ut.TestCase):
     def test14_modifier_pressed(self):
         map(self.parser, parse_events('pa pb rb ra'))
         self.assertEqual('pshift pb rb s rshift s', self.kbd.events)
-        
 
+def find_warning(msg):
+    raise msg
 
 if __name__ == "__main__":
+    # logging.warning = find_warning
     ut.main(failfast=True, exit=False)
     

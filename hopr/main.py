@@ -98,7 +98,9 @@ def setup_parser(kbd_out, cfg):
     p = eventparser.EventParser(key_map=key_map,
                                 kbd=kbd_out,
                                 on_off_key=cfg.key_bindings.on_off,
-                                passthrough_keys=cfg.key_bindings.passthrough)
+                                passthrough_keys=cfg.key_bindings.passthrough,
+                                send_unknown_chord=cfg.app.send_unknown_chord,
+                                )
 
     return p
 

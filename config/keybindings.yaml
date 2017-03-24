@@ -42,7 +42,7 @@ layers:
   space: { # Left Hand
          tab:,      q: ctrl+shift+bksp,     w: ctrl+shift+del,      e: ctrl+bksp, r: ctrl+del, t:,
          capslock:, a:,                     s:,                     d: bksp,      f: del,      g:,
-         shift:,    z: undo,                x: cut,                 c: copy,      v: paste,    b:,
+         shift:,    z: ctrl+z,                x: cut,                 c: copy,      v: paste,    b:,
          # Right Hand
          y:,        u: ctrl+down, i: ctrl+up,    o: ctrl+left,  p: ctrl+right,    leftbrace:,  rightbrace:,
          h: return, j: down,      k: up,         l: left,       semicolon: right, apostrophe:, return:,
