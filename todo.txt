@@ -2,25 +2,25 @@
 
 !! Prio 1
 
-# Unexpected key releases:
-## passthrough keys and "send unknown chord" sends press key events and clears list of passed_keys. Makes it impossible to later match released key events. 
+# x Unexpected key releases:
+## x passthrough keys and "send unknown chord" sends press key events and clears list of passed_keys. Makes it impossible to later match released key events. 
 
 # x SPACE+z for undo
-# Default to sending events for unrecognized chords.
-## Add config switch.
+# x Default to sending events for unrecognized chords.
+## x Add config switch.
 
 # Set keyboard devide /dev/input/event* or keyboard matching pattern in config.
 
 # US keyboard layout
-# Remove duplicate coding:
+# x Remove duplicate coding:
 # kbdlayout: Symbols, summary, explanations etc.
 
 # No help text if no rw permissions on uinput and evdev. uinput and evdev are created/grabbed before arguments are parsed.    
 
 # Log level as cmd line argument
 ## Clean up run script
-# Clean up notes
-# Write simple docs
+# x Clean up notes
+# x Write simple docs
 
 # Logging: Info vs debug etc.
 ## Prevent accidental key logging. 
