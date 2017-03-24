@@ -2,7 +2,7 @@
 
 !! Prio 1
 
-# SPACE+z for undo
+# x SPACE+z for undo
 # Default to sending events for unrecognized chords.
 ## Add config switch.
 
@@ -25,6 +25,17 @@
 # Convert notes.txt to md or rst
 
 !! Prio 2
+
+* Check out some projects:
+** Hook global events, register hotkeys, simulate key presses and much more.
+*** https://github.com/boppreh/keyboard
+** Simulate keypress in linux / windows
+*** https://github.com/micmonay/keybd_event
+
+* Glyph names
+** https://svn.apache.org/repos/asf/xmlgraphics/commons/tags/commons-1_0/src/java/org/apache/xmlgraphics/fonts/Glyphs.java
+
+* Remove tests requiring physical keyboard from tests. evdev/test_kbdinput.py
 
 * Rename and rethink naming conventions. It's a mix between chords, shortcuts and physical keyboard remapping.
 ** Physical key events -> detect chords (chord modifiers + chord key) -> map to new key events
