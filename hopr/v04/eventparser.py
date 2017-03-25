@@ -15,7 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
-
 import logging
 
 class VirtualKeyboard(object):
@@ -121,7 +120,6 @@ class EventParser(object):
         Handle release of the i:th key.        
         """
         mapped = self.key_map(self.pressed_keys, i)
-        logging.debug('Sending: ' + str(mapped))
 
         if mapped:
             (mods, key) = mapped
@@ -184,8 +182,6 @@ class EventParser(object):
 
 
     def __call__(self, event):
-        logging.debug("EventParser: event=" + str(event))
-        
         if self.handle_on_off(event):
             return
         
