@@ -2,22 +2,26 @@
 
 !! Prio 1
 
+# Rewrite run script
+## No help text if no rw permissions on uinput and evdev. uinput and evdev are created/grabbed before arguments are parsed.    
+## Log level as cmd line argument
+
 # Set keyboard devide /dev/input/event* or keyboard matching pattern in config.
 
 # US keyboard layout
 # kbdlayout: Symbols, summary, explanations etc.
 
-# No help text if no rw permissions on uinput and evdev. uinput and evdev are created/grabbed before arguments are parsed.    
-
-# Log level as cmd line argument
-## Clean up run script
-
-# Logging: Info vs debug etc.
-## Prevent accidental key logging. 
+# Logging: Info vs debug etc. Review when and where info vs warning is used. 
+## x Prevent accidental key logging. 
 
 # Convert notes.txt to md or rst
 
 !! Prio 2
+
+
+* Review eventparser.
+** Move chord parsing stuff into separate function.
+** Review what should be in VirtualKeyboard class
 
 * Convert todo list to md
 
@@ -35,10 +39,6 @@
 * Rename and rethink naming conventions. It's a mix between chords, shortcuts and physical keyboard remapping.
 ** Physical key events -> detect chords (chord modifiers + chord key) -> map to new key events
 ** Event - Chord - X
-
-
-
-
 
 # Alias for delete word backward, kill line forward etc
 # Cmd line option: Ignore/Send unrecognized chords. Default to send events?

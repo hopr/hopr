@@ -22,11 +22,11 @@ from mock import patch
 
 import etype
 
-from hopr.backend.evdev.kbdoutput import *
+from hopr.backend.linuxevdev.kbdoutput import *
 
 class Tests(ut.TestCase):
 
-    @patch('hopr.backend.evdev.kbdoutput.UInput', autospec=True)
+    @patch('hopr.backend.linuxevdev.kbdoutput.UInput', autospec=True)
     def setUp(self, ui):
         self.out = KbdOutput()
 
@@ -49,7 +49,7 @@ class Tests(ut.TestCase):
         self.out.sync()
         self.out.ui.syn.assert_called_once_with()
 
-    @patch('hopr.backend.evdev.kbdoutput.UInput', autospec=True)
+    @patch('hopr.backend.linuxevdev.kbdoutput.UInput', autospec=True)
     def test2_with(self, ui):
         with KbdOutput() as kbd:            
             kbd.press('a')

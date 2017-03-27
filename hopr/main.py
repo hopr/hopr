@@ -20,7 +20,7 @@
 # TODO: Clean up!
 
 import logging
-# TODO: Strange. Log level is set to warning when I add logging statements in backend.evdev.kbdoutput.
+# TODO: Strange. Log level is set to warning when I add logging statements in linux.backend.evdev.kbdoutput.
 
 import os, sys
 # TODO: HACK: base_dir depends on location of current file.
@@ -40,56 +40,16 @@ logging.basicConfig(level=logging.INFO,
 log = logging.getLogger()
 log.addHandler(logging.StreamHandler())
 
-
 from functools import partial
 
 from tool import config
-from backend import evdev
-
+import backend.linuxevdev as backend
 
 # TODO: Rename run.py to something more descriptive
 from tool.run import Run
 from v04 import eventparser, keymap
 
-
 from pprint import pprint
-import signal
-
-signal_name = dict((v,k) for k,v in vars(signal).items() if k.startswith('SIG'))
-
-def exit_on_signal(sig, frame):
-    msg = 'Caught signal {}={}. Exiting...'.format(signal_name[sig], sig)
-    if sig in (signal.SIGTERM, signal.SIGINT, signal.SIGHUP, signal.SIGTSTP):
-        log.info(msg)
-        sys.exit(0) # NOTE: Raises SystemExit
-    else:
-        raise RuntimeError(msg)
-
-def register_signal_handlers():
-    # NOTE: Application exits on C-z
-    
-    # Handle signals: Hangup, terminate, suspend (terminal stop)
-    # SIGTERM: Ask for termination. Can be blocked
-    # SIGINT: Interrupt C-c.
-    # SIGTSTP: Suspend C-z.
-    # SIGHUP: Hangup. Terminal disconnected.
-    # SIGQUIT: User detected error. Create core dump. TODO:
-
-    # Unblockable and unhandled:
-    # SIGSTOP: Stops process.
-    # SIGKILL: Unblockable kill
-
-    for sig in (signal.SIGTERM, signal.SIGHUP, signal.SIGTSTP, signal.SIGQUIT, signal.SIGINT):
-        signal.signal(sig, exit_on_signal)
-
-def send_event(kbd, e):
-    if e.is_press():
-        kbd.press(e.key)
-    elif e.is_release():
-        kbd.release(e.key)
-    else:
-        raise ValueError("Unexpected event: " + str(e))
-
 
 def setup_parser(kbd_out, cfg):
     key_map = keymap.KeyMap(modifiers=cfg.key_bindings.modifiers,
@@ -106,23 +66,22 @@ def setup_parser(kbd_out, cfg):
 
 
 def is_press_or_release(ev):
-    return evdev.is_press(ev) or evdev.is_release(ev)
+    return backend.is_press(ev) or backend.is_release(ev)
 
 
 def run(args):
-    register_signal_handlers()
+    backend.register_signal_handlers()
 
     cfg = config.load_config(config_dir)
     
-    with evdev.make_virtual_kbd() as kbdout:
+    with backend.make_virtual_kbd() as kbdout:
         parser = setup_parser(kbdout, cfg)
-        # TODO: No help text if no rw permissions on uinput and evdev. uinput and evdev are created/grabbed before arguments are parsed. 
         runner = Run(parser=parser,
-                     event_wrapper=evdev.Event,
+                     event_wrapper=backend.Event,
                      # NOTE: Filter only press/release events (ignore hold for now)
-                     read_events=partial(evdev.read_events, event_filter=is_press_or_release),
-                     grab_keyboards=evdev.grab,
-                     find_keyboards=evdev.find_keyboards,
+                     read_events=partial(backend.read_events, event_filter=is_press_or_release),
+                     grab_keyboards=backend.grab,
+                     find_keyboards=backend.find_keyboards,
                      )
         runner.run_parse_args(args)
 

@@ -22,3 +22,4 @@ from etype import is_press, is_release
 # TODO: Rename to devices?
 from kbdinput import find_keyboards, grab, read_events
 from kbdoutput import make_virtual_kbd
+from signalhandlers import register_signal_handlers

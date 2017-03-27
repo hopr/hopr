@@ -20,6 +20,7 @@ import unittest as ut
 from kbdinput import *
 
 class Tests(ut.TestCase):
+    # TODO: NOTE: Need read permissions on /dev/input/* to work
     def test1_find_keyboards(self):
         kbds = find_keyboards()
         self.assert_(len(kbds) >= 1)
