@@ -16,4 +16,20 @@
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
 
+# TODO: Reconsider
+from eventparser import EventParser
+from keymap import KeyMap
 
+def make_eventparser(cfg, output_kbd):
+
+    key_map = keymap.KeyMap(modifiers=cfg.key_bindings.modifiers,
+                            chords=cfg.key_bindings.layers)
+
+    p = eventparser.EventParser(key_map=key_map,
+                                kbd=output_kbd,
+                                on_off_key=cfg.key_bindings.on_off,
+                                passthrough_keys=cfg.key_bindings.passthrough,
+                                send_unknown_chord=cfg.app.send_unknown_chord,
+                                )
+
+    return p

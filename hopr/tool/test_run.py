@@ -20,14 +20,16 @@ import unittest as ut
 from mock import MagicMock, sentinel, call
 
 
-from run import Run, parse_args
+from run import Run, parse_args, run
 
 class TestParseArgs(ut.TestCase):
     def setUp(self):
         self.args = {'no_grab': False,
                      'timeout': 5,
-                     'log_level': 'debug',
+                     'log_level': 'info',
                      'print_keymap': False,
+                     'log_file': '',
+                     'config_dir': '',
                      }
         
     def test2_parse_args(self):
@@ -49,7 +51,9 @@ class TestParseArgs(ut.TestCase):
         x = parse_args(''.split())
         self.assertEqual({'no_grab': False,
                           'timeout': 5,
-                          'log_level': 'debug',
+                          'log_level': 'info',
+                          'log_file': '',
+                          'config_dir': '',
                           'print_keymap': False,
                           }, vars(x))
 
@@ -63,8 +67,8 @@ class TestRun(ut.TestCase):
 
     def test1_no_events(self):
         self.run.run(timeout=5,
-                     no_grab=True,
-                     log_level='error')
+                     no_grab=True)
+                     
 
     def test2_keyboards_are_optionally_grabbed(self):
         kbds = [sentinel.kbd1, sentinel.kbd2]
@@ -103,8 +107,19 @@ class TestRun(ut.TestCase):
         self.run.run(timeout=-1)
         
         
+class TestRunFunction(ut.TestCase):
+    def test(self):
+        backend = MagicMock(name='backend')
+        make_eventparser = MagicMock(name='make_eventparser')
+        args = '--log-level=error'.split()
+        run(backend=backend,
+            make_eventparser=make_eventparser,
+            args=args)
+
 
 
 if __name__ == "__main__":
+    # import logging
+    # logging.getLogger().setLevel('ERROR')
     ut.main(failfast=True, exit=False)
     

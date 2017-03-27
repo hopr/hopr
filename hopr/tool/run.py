@@ -16,11 +16,18 @@
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
 
+# TODO: Reconsider safe construction/destruction kbd output and grabbing/ungrabbing of kbd input. OS independence. 
+
+import os
+import sys
 import argparse
 import logging
+from functools import partial
 from contextlib import contextmanager
 from time import time
 from pprint import pprint
+
+import config
 
 class Timeout(object):
     def __init__(self, t):
@@ -31,15 +38,15 @@ class Timeout(object):
 
 never_timeout = lambda : False
 
+# TODO: Clean up!
+
 @contextmanager
 def do_not_grab_keyboards():
     yield
 
-def set_log_level(name):
-    logging.basicConfig(level=name.upper())
-
 def parse_args(args):
     p = argparse.ArgumentParser()
+    p.add_argument('--config-dir', default='')
     p.add_argument('--no-grab', action='store_true')
     p.add_argument('-t', '--timeout', default=5, type=float)
     p.add_argument('-x',
@@ -48,9 +55,10 @@ def parse_args(args):
                    action='store_const',
                    const=0)
 
+    p.add_argument('--log-file', default='')
     p.add_argument('--log-level',
                    type=str,
-                   default='debug',
+                   default='info',
                    choices='debug info warning error critical'.split())
 
     p.add_argument('--print-keymap', action='store_true')
@@ -75,10 +83,7 @@ class Run(object):
     def run(self,
             timeout=5,
             no_grab=True,
-            log_level='error',
             print_keymap=False):
-
-        set_log_level(log_level)
 
         if print_keymap:
             # TODO: HACK: Fix.
@@ -114,9 +119,83 @@ class Run(object):
 
 
 
-    def run_parse_args(self, args):
-        x = parse_args(args)
-        self.run(**vars(x))
+
+
+# TODO: Review: Is this filter necessary?
+def is_press_or_release(backend, ev):
+    return backend.is_press(ev) or backend.is_release(ev)
+
+
+# TODO: Review. Merge with Run class. Probably remove class 
+def start_event_parser(backend,
+                       make_eventparser,
+                       cfg,
+                       args):
+    
+    backend.register_signal_handlers()
+
+    with backend.make_virtual_kbd() as kbdout:
+        parser = make_eventparser(cfg, kbdout)
+        # NOTE: Filter only press/release events (ignore hold for now)
+        event_filter = partial(is_press_or_release, backend)
+        runner = Run(parser=parser,
+                     event_wrapper=backend.Event,
+                     read_events=partial(backend.read_events, event_filter=event_filter),
+                     grab_keyboards=backend.grab,
+                     find_keyboards=backend.find_keyboards,
+                     )
+
+        # TODO: Merge cfg and args. Should be able to use both interchangeably
+        runner.run(timeout=args.timeout,
+                   no_grab=args.no_grab,
+                   print_keymap=args.print_keymap)
+                   
+                   
+def setup_logging(log_file,
+                  log_level):
+
+    log = logging.getLogger()
+    log.setLevel(log_level.upper())
+    
+    log.addHandler(logging.StreamHandler())
+
+    if log_file:
+        f = logging.FileHandler(log_file, encoding='utf-8')
+        f.setFormatter('%(asctime)s %(message)s')
+        log.addHandler(f)
+        
+        log.info('Logging to ' + args.log_file)
+
+def base_dir():
+    # TODO: HACK: base_dir depends on location of current file. Unstable.
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir, os.path.pardir))    
+
+def default_config_dir():
+    return os.path.join(base_dir(), 'config')
+
+def run(backend,
+        make_eventparser,
+        args):
+
+    args = parse_args(args)
+    setup_logging(log_file=args.log_file,
+                  log_level=args.log_level)
+        
+    try:
+        config_dir = args.config_dir or default_config_dir()
+        cfg = config.load_config(config_dir)
+        
+        start_event_parser(backend,
+                           make_eventparser,
+                           cfg,
+                           args)
+    except SystemExit as e:
+        sys.exit(e)
+    except:
+        import traceback
+        logging.error(traceback.format_exc())
+        raise
+
 
 
 if __name__ == "__main__":
