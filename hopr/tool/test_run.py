@@ -20,7 +20,25 @@ import unittest as ut
 from mock import MagicMock, sentinel, call
 
 
-from run import Run, parse_args, run
+from run import *  # Run, parse_args, run
+
+class Test1Misc(ut.TestCase):
+    def test_timeout(self):
+        dt = 0.01
+        
+        t1 = time()
+        timeout = Timeout(dt)
+        while(True):
+            a = timeout()
+            t2 = time()
+            
+            if t2 - t1 < dt:
+                self.assertEqual(a, False)
+            else:
+                break
+            
+        self.assertEqual(timeout(), True)
+            
 
 class TestParseArgs(ut.TestCase):
     def setUp(self):
@@ -59,52 +77,57 @@ class TestParseArgs(ut.TestCase):
 
 class TestRun(ut.TestCase):
     def setUp(self):
-        self.run = Run(parser=MagicMock(name='parser'),
-                       event_wrapper=MagicMock(name='event_wrapper'),
-                       find_keyboards=MagicMock(name='find_keyboards'),
-                       read_events=MagicMock(name='read_events'),
-                       grab_keyboards=MagicMock(name='grab_keyboards'))
+        params = dict(event_parser=MagicMock(name='parser'),
+                      event_wrapper=MagicMock(name='event_wrapper'),
+                      find_keyboards=MagicMock(name='find_keyboards'),
+                      read_events=MagicMock(name='read_events'),
+                      grab_keyboards=MagicMock(name='grab_keyboards'))
+        
+        for k,v in params.items():
+            setattr(self, k, v)
+
+        self.run = partial(run, **params)
 
     def test1_no_events(self):
-        self.run.run(timeout=5,
-                     no_grab=True)
+        self.run(timeout=5,
+                 no_grab=True)
                      
 
     def test2_keyboards_are_optionally_grabbed(self):
         kbds = [sentinel.kbd1, sentinel.kbd2]
-        self.run.find_keyboards.return_value = kbds
-        self.run.run(no_grab=True)
-        self.run.grab_keyboards.assert_not_called()
+        self.find_keyboards.return_value = kbds
+        self.run(no_grab=True)
+        self.grab_keyboards.assert_not_called()
 
-        self.run.run(no_grab=False)
-        self.run.grab_keyboards.assert_called_once_with(kbds)
+        self.run(no_grab=False)
+        self.grab_keyboards.assert_called_once_with(kbds)
 
     def test2_keyboards_events_are_read(self):
         kbds = [sentinel.kbd1, sentinel.kbd2]
         
-        self.run.find_keyboards.return_value = kbds
-        self.run.run()
-        self.run.read_events.assert_called_once_with(kbds)
+        self.find_keyboards.return_value = kbds
+        self.run()
+        self.read_events.assert_called_once_with(kbds)
 
     def test2_events_are_wrapped_before_parsing(self):
         events = [sentinel.event]
-        self.run.read_events.return_value = events
-        self.run.event_wrapper.return_value = sentinel.wrapped_event
-        self.run.run()
-        self.run.event_wrapper.assert_called_once_with(sentinel.event)
-        self.run.parser.assert_called_once_with(sentinel.wrapped_event)
+        self.read_events.return_value = events
+        self.event_wrapper.return_value = sentinel.wrapped_event
+        self.run()
+        self.event_wrapper.assert_called_once_with(sentinel.event)
+        self.event_parser.assert_called_once_with(sentinel.wrapped_event)
 
 
     def test2_events_are_sent_to_parser(self):
         events = [sentinel.event1, sentinel.event2]
-        self.run.read_events.return_value = events
-        self.run.event_wrapper.side_effect = lambda x : x
-        self.run.run()
-        self.run.parser.assert_has_calls([call(e) for e in events])
+        self.read_events.return_value = events
+        self.event_wrapper.side_effect = lambda x : x
+        self.run()
+        self.event_parser.assert_has_calls([call(e) for e in events])
 
 
     def test3_timeout(self):
-        self.run.run(timeout=-1)
+        self.run(timeout=-1)
         
         
 class TestRunFunction(ut.TestCase):
@@ -112,9 +135,9 @@ class TestRunFunction(ut.TestCase):
         backend = MagicMock(name='backend')
         make_eventparser = MagicMock(name='make_eventparser')
         args = '--log-level=error'.split()
-        run(backend=backend,
-            make_eventparser=make_eventparser,
-            args=args)
+        run_parse_args(backend=backend,
+                       make_eventparser=make_eventparser,
+                       args=args)
 
 
 

@@ -16,8 +16,6 @@
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# TODO: Reconsider safe construction/destruction kbd output and grabbing/ungrabbing of kbd input. OS independence. 
-
 import os
 import sys
 import argparse
@@ -36,9 +34,8 @@ class Timeout(object):
     def __call__(self):
         return time() > self.t
 
-never_timeout = lambda : False
 
-# TODO: Clean up!
+never_timeout = lambda : False
 
 @contextmanager
 def do_not_grab_keyboards():
@@ -65,72 +62,57 @@ def parse_args(args):
 
     return p.parse_args(args)
 
+def run(event_parser,
+        event_wrapper,
+        find_keyboards,
+        read_events,
+        grab_keyboards, 
+        timeout=5,
+        no_grab=True,
+        print_keymap=False):
+    
+    if print_keymap:
+        # TODO: HACK: Fix.
+        pprint(event_parser.key_map.chords)
+        pprint(event_parser.key_map.modifiers)
+        return
 
-class Run(object):
-    def __init__(self,
-                 parser,
-                 event_wrapper,
-                 find_keyboards,
-                 read_events,
-                 grab_keyboards):
-        self.parser = parser
-        self.event_wrapper = event_wrapper
-        
-        self.find_keyboards = find_keyboards
-        self.read_events = read_events
-        self.grab_keyboards = grab_keyboards
+    if timeout:
+        logging.info('Automatic timeout in {}s'.format(timeout))
+        is_timeout = Timeout(timeout)
+    else:
+        is_timeout = never_timeout
 
-    def run(self,
-            timeout=5,
-            no_grab=True,
-            print_keymap=False):
+    kbds = find_keyboards()    
 
-        if print_keymap:
-            # TODO: HACK: Fix.
-            pprint(self.parser.key_map.chords)
-            pprint(self.parser.key_map.modifiers)
-            return
+    logging.info('Found keyboards:')
+    logging.info('\n'.join(str(kbd) for kbd in kbds))
 
-        if timeout:
-            logging.info('Automatic timeout in {}s'.format(timeout))
-            is_timeout = Timeout(timeout)
-        else:
-            is_timeout = never_timeout
+    # NOTE: Keys can get stuck if exceptions occur after the keyboard was grabbed.
+    #       i.e. ctrl is held when program starts, keyboard is grabbed and an exception occurs before release event is sent
+    if not no_grab:
+        logging.info('Grabbing keyboards')
+        grab_keyboards = grab_keyboards(kbds)
+    else:
+        grab_keyboards = do_not_grab_keyboards() 
 
-        kbds = self.find_keyboards()    
+    with grab_keyboards: 
+        for ev in read_events(kbds):
+            if is_timeout():
+                break
 
-        logging.info('Found keyboards:')
-        logging.info('\n'.join(str(kbd) for kbd in kbds))
-
-        # NOTE: Keys can get stuck if exceptions occur after the keyboard was grabbed.
-        #       i.e. ctrl is held when program starts, keyboard is grabbed and an exception occurs before release event is sent
-        if not no_grab:
-            logging.info('Grabbing keyboards')
-            grab_keyboards = self.grab_keyboards(kbds)
-        else:
-            grab_keyboards = do_not_grab_keyboards() 
-
-        with grab_keyboards: 
-            for ev in self.read_events(kbds):
-                if is_timeout():
-                    break
-
-                self.parser(self.event_wrapper(ev))
+            event_parser(event_wrapper(ev))
 
 
 
-
-
-# TODO: Review: Is this filter necessary?
+# TODO: Review: Is this filter necessary? Make it part of backend. Only return filtered events?
 def is_press_or_release(backend, ev):
     return backend.is_press(ev) or backend.is_release(ev)
 
-
-# TODO: Review. Merge with Run class. Probably remove class 
-def start_event_parser(backend,
-                       make_eventparser,
-                       cfg,
-                       args):
+def run_config(backend,
+               make_eventparser,
+               cfg,
+               args):
     
     backend.register_signal_handlers()
 
@@ -138,17 +120,16 @@ def start_event_parser(backend,
         parser = make_eventparser(cfg, kbdout)
         # NOTE: Filter only press/release events (ignore hold for now)
         event_filter = partial(is_press_or_release, backend)
-        runner = Run(parser=parser,
-                     event_wrapper=backend.Event,
-                     read_events=partial(backend.read_events, event_filter=event_filter),
-                     grab_keyboards=backend.grab,
-                     find_keyboards=backend.find_keyboards,
-                     )
 
         # TODO: Merge cfg and args. Should be able to use both interchangeably
-        runner.run(timeout=args.timeout,
-                   no_grab=args.no_grab,
-                   print_keymap=args.print_keymap)
+        run(event_parser=parser,
+            event_wrapper=backend.Event,
+            read_events=partial(backend.read_events, event_filter=event_filter),
+            grab_keyboards=backend.grab,
+            find_keyboards=backend.find_keyboards,
+            timeout=args.timeout,
+            no_grab=args.no_grab,
+            print_keymap=args.print_keymap)
                    
                    
 def setup_logging(log_file,
@@ -173,9 +154,9 @@ def base_dir():
 def default_config_dir():
     return os.path.join(base_dir(), 'config')
 
-def run(backend,
-        make_eventparser,
-        args):
+def run_parse_args(backend,
+                   make_eventparser,
+                   args):
 
     args = parse_args(args)
     setup_logging(log_file=args.log_file,
@@ -183,12 +164,14 @@ def run(backend,
         
     try:
         config_dir = args.config_dir or default_config_dir()
+        # TODO: Merge args and config
         cfg = config.load_config(config_dir)
         
-        start_event_parser(backend,
-                           make_eventparser,
-                           cfg,
-                           args)
+        run_config(backend,
+                   make_eventparser,
+                   cfg,
+                   args)
+        
     except SystemExit as e:
         sys.exit(e)
     except:
