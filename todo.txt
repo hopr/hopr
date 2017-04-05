@@ -2,22 +2,17 @@
 
 !! Prio 1
 
-# Rewrite run script
-## No help text if no rw permissions on uinput and evdev. uinput and evdev are created/grabbed before arguments are parsed.    
-## Log level as cmd line argument
-
-# Set keyboard devide /dev/input/event* or keyboard matching pattern in config.
-
 # US keyboard layout
 # kbdlayout: Symbols, summary, explanations etc.
 
 # Logging: Info vs debug etc. Review when and where info vs warning is used. 
-## x Prevent accidental key logging. 
 
 # Convert notes.txt to md or rst
 
 !! Prio 2
 
+* Merge args and config
+# Set keyboard devide /dev/input/event* or keyboard matching pattern in config.
 
 * Review eventparser.
 ** Move chord parsing stuff into separate function.
