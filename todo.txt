@@ -2,6 +2,7 @@
 
 !! Prio 1
 
+# Integration testing. There are no tests at all for main.py
 # US keyboard layout
 # kbdlayout: Symbols, summary, explanations etc.
 

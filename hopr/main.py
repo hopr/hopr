@@ -17,15 +17,15 @@
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
 import backend.linuxevdev as backend
-from tool.run import run
+from tool.run import run_parse_args
 from v04 import make_eventparser
 
 def main():
     import sys
-    run(backend=backend,
-        args=sys.argv[1:],
-        make_eventparser=make_eventparser
-        )    
+    run_parse_args(backend=backend,
+                   args=sys.argv[1:],
+                   make_eventparser=make_eventparser
+                   )    
 
 if __name__ == "__main__":
     main()
