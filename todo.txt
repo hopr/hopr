@@ -2,6 +2,13 @@
 
 !! Prio 1
 
+# Caps lock mode: Better way to hold shift and type ALL CAPS
+# Num mode:
+## Type */\ etc. Maybe map to 789?
+## Map S-H to RET instead of -. I'm using RET more often? But typing negative numbers should be easy...
+## Map s-spc to SPC. Currently s-spc types an s when using non-swallowing chord mode
+# Add Alt-Up/Down when switching windows. Probably to U-A/S but that confuses it a bit with right hand movement.
+
 # Integration testing. There are no tests at all for main.py
 # US keyboard layout
 # kbdlayout: Symbols, summary, explanations etc.
