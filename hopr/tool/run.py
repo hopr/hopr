@@ -29,10 +29,10 @@ import config
 
 class Timeout(object):
     def __init__(self, t):
-        self.t = time() + t
+        self.end_time = time() + t
 
     def __call__(self):
-        return time() > self.t
+        return time() > self.end_time
 
 
 never_timeout = lambda : False

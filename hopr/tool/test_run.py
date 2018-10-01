@@ -25,18 +25,22 @@ from run import *  # Run, parse_args, run
 class Test1Misc(ut.TestCase):
     def test_timeout(self):
         dt = 0.01
-        
-        t1 = time()
+        e = 0.001
+
         timeout = Timeout(dt)
+        t1 = time()
         while(True):
             a = timeout()
             t2 = time()
             
-            if t2 - t1 < dt:
+            if t2 - t1 < dt-e:
                 self.assertEqual(a, False)
             else:
                 break
-            
+
+        while(t2 - t1 <= dt + e):
+            t2 = time()
+
         self.assertEqual(timeout(), True)
             
 

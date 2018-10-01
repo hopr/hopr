@@ -1,6 +1,7 @@
 ! ToDo
 
 !! Prio 1
+# Caps lock bug: Caps lock can be activated permanently by press shift, press caps lock, release shift release caps lock
 
 # Caps lock mode: Better way to hold shift and type ALL CAPS
 # Num mode:
