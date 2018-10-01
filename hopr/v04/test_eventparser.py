@@ -132,6 +132,7 @@ class Test1EventParser(ut.TestCase):
         map(self.parser, parse_events('px py pb rb ry rx'))
         self.assertEqual('pq rq s', self.kbd.events)
 
+    # TODO: Mocking does not work when running as hopr user. Does not suppress output.
     @mock.patch('hopr.v04.eventparser.logging.warning', autospec=True)
     def test25_missing_key_map(self, warn):
         self.parser.send_unknown_chord = False

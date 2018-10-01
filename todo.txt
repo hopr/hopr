@@ -1,6 +1,10 @@
 ! ToDo
 
 !! Prio 1
+# Remove obsolete hopr/v04 directory.
+# Mocking does not suppress stdout when running as hopr user.
+test25_missing_key_map (hopr.v04.test_eventparser.Test1EventParser) ... Unknown chord: ['X', 'A']
+
 # Caps lock bug: Caps lock can be activated permanently by press shift, press caps lock, release shift release caps lock
 
 # Caps lock mode: Better way to hold shift and type ALL CAPS
