@@ -79,6 +79,16 @@ class TestParseArgs(ut.TestCase):
                           'print_keymap': False,
                           }, vars(x))
 
+    def test1_parse_args_defaults(self):
+        x = parse_args('--log-file log.txt'.split())
+        self.assertEqual({'no_grab': False,
+                          'timeout': 5,
+                          'log_level': 'info',
+                          'log_file': 'log.txt',
+                          'config_dir': '',
+                          'print_keymap': False,
+                          }, vars(x))
+
 class TestRun(ut.TestCase):
     def setUp(self):
         params = dict(event_parser=MagicMock(name='parser'),
@@ -142,6 +152,16 @@ class TestRunFunction(ut.TestCase):
         run_parse_args(backend=backend,
                        make_eventparser=make_eventparser,
                        args=args)
+
+    def test_log_file(self):
+        backend = MagicMock(name='backend')
+        make_eventparser = MagicMock(name='make_eventparser')
+        # TODO: Replace /dev/null with something else. Does not work on win.
+        args = '--log-file=/dev/null '.split()
+        run_parse_args(backend=backend,
+                       make_eventparser=make_eventparser,
+                       args=args)
+        
 
 
 

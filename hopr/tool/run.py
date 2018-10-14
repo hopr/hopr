@@ -145,7 +145,7 @@ def setup_logging(log_file,
         f.setFormatter('%(asctime)s %(message)s')
         log.addHandler(f)
         
-        log.info('Logging to ' + args.log_file)
+        log.info('Logging to ' + log_file)
 
 def base_dir():
     # TODO: HACK: base_dir depends on location of current file. Unstable.
