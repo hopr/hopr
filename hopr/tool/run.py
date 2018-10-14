@@ -142,7 +142,7 @@ def setup_logging(log_file,
 
     if log_file:
         f = logging.FileHandler(log_file, encoding='utf-8')
-        f.setFormatter('%(asctime)s %(message)s')
+        f.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
         log.addHandler(f)
         
         log.info('Logging to ' + log_file)

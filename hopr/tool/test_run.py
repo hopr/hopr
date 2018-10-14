@@ -17,11 +17,15 @@
 
 
 import unittest as ut
+import tempfile
+
 from mock import MagicMock, sentinel, call
 
 
 from run import *  # Run, parse_args, run
 
+
+# TODO: Suppress log output during tests.
 class Test1Misc(ut.TestCase):
     def test_timeout(self):
         dt = 0.01
@@ -154,13 +158,19 @@ class TestRunFunction(ut.TestCase):
                        args=args)
 
     def test_log_file(self):
+        f = tempfile.NamedTemporaryFile()
         backend = MagicMock(name='backend')
         make_eventparser = MagicMock(name='make_eventparser')
-        # TODO: Replace /dev/null with something else. Does not work on win.
-        args = '--log-file=/dev/null '.split()
+        args = ['--log-level', 'debug', '--log-file', f.name]
         run_parse_args(backend=backend,
                        make_eventparser=make_eventparser,
                        args=args)
+
+        logging.getLogger().debug('Test Message')
+
+        text = f.read()
+        self.assert_(text.strip().endswith('Test Message'))
+        
         
 
 
