@@ -1,29 +1,39 @@
-# Hopr - Hold and Press keyboard shortcuts
-A pseudo-chorded keyboard remapper.
+# HoPR - Hold and Press keyboard shortcuts
+Map Hold and Press key events to any other combination of key events.
+
+Examples:
+
+    Hold SPACE and the right hand is used for movement (arrow keys, page up etc)
+    Hold D and the right hand can type symbols like parenthesis, brackets and braces.
+    Hold S and the right hand can be used as a numerical keyboard.
+    Hold F or J are alternatives for left and right Shift
 
 ## What is it?
-Hopr is an attempt at creating a more ergonomic keyboard experience by adding a special type of key stroke called chords. Hopr distinguishes between ordinary typing, where the first key is typically released before the second, and chords where the first key is held and the second key is released before the first. Chords can then be mapped to any other key sequence such as arrow `UP` or `CTRL+DEL`.
+HoPR is an attempt at creating a more ergonomic keyboard experience by mapping hard to reach keys to special key combinations accessible from the home row. It does this by distinguishing between ordinary typing where keys are pressed sequentially and special hold-and-press events (chords) where the first key is held and the second key is released before the first. 
 
-The main goal is to reduce stress on the hands and fingers by moving hard to reach keys and key combinations to more central positions. All common keyboard actions such as movement, editing, typing etc can be reached without leaving the home row. For example:
+The main goal is to reduce stress on the hands and weaker fingers by moving hard to reach keys and key combinations to central positions. All common keyboard actions such as movement, editing, typing etc can be reached without leaving the home row and without stretching the hand too much. For example:
 
 * The arrow keys can be accessed by holding `SPACE` and pressing `J,K,L` or `SEMICOLON`. 
 * Move up/down paragraph and forward/back word can be accessed by holding `SPACE` and pressing `U,I,O` or `P`.
 * Page up/down and Home/End are accessed by holding `SPACE` and pressing `M,COMMA,DOT` or `SLASH`.
-* `V` and `M` are mapped as additional `CTRL` keys. That is, holding `M` and pressing `X` is the same as pressing `CTRL+X`
+* `V` and `M` are mapped as additional `CTRL` keys and `F,J` are mapped as additional `SHIFT` keys.
 
-It works by distinguishing between sequential key presses and Hold-and-Press key events called chords. For example, during normal typing of the characters `AB` the following key events may be created:
+
+During normal typing, the first key pressed is typically released before the second pressed key is released. For example, fast typing of the characters `AB` may result in the key events
 
     <PRESS A> <PRESS B> <RELEASE A> <RELEASE B>
 
-Note that the `B` key is often pressed before the `A` key is released. This is OK since most programs only pay attention to press events.
+where the `B` key is pressed before the `A` is released. This is OK since most programs only pay attention to key press events.
 
-A key stroke is considered a chord if two keys are pressed and the second key is released before the first. For example, pressing and holding A and then pressing and releasing B is detected as the chord `A+B` which can be mapped to another key stroke:
+A sequence of key events is considered a chord if the first key is released after the second key is released. For example, pressing and holding A and then pressing and releasing B is detected as the chord `A+B` which can be mapped to another key stroke:
 
     <PRESS A> <PRESS B> <RELEASE B> <RELEASE A> -> chord A+B
     
-Therefore, typing `SIM` the usual way results in the text `sim` but holding `S` and typing `IM` gives the numbers `81`.
+Therefore, typing `SIM` the normally results in the text `sim` but holding `S` and typing `IM` gives the numbers `81`.
 
-Hopr relies on the order of press and release events to distinguish between normal key strokes and chords. Hopr is not a chorded keyboard in the traditional sense since the order of the key press and release events is important. The order of the held keys is not important though and `AB` and pressing `C` is the same as holding `BA` and pressing `C`. 
+Hopr relies on the order of press and release events to distinguish between normal key strokes and chords. Hopr is not a chorded keyboard in the traditional sense since the order of the key events is important. But, like a chorded keyboard, one or more keys can be held pressed to produce a chord. 
+The order of the held keys is not important though and `AB` and pressing `C` is the same as holding `BA` and pressing `C`. 
+
 
 ### Features
 
@@ -37,7 +47,7 @@ Hopr relies on the order of press and release events to distinguish between norm
 
 ### Side Effects
 
-* Key press and release events are not sent until the key is released. This gives a slight lag which at first makes the keyboard feel sluggish.
+* Key press and release events are not sent until the key is released. This gives a slight lag which at first may make the keyboard feel sluggish.
 * Key event order is not preserved. For example, Press A, Press B, Release A, Release B will be parsed as Press A, Release A, Press B, Release B
 * There are still some false-positives. Further testing is needed to see when and why they occur it if further improvements can be made.
 * Some chords such as `D+DOT` seem more error prone than others. Key bindings must be evaluated further.
@@ -55,11 +65,15 @@ By default, the `SHIFT, CTRL, ALT` keys are not parsed for chords but all key ev
 Hopr is currently in a working Linux-only prototype stage. It works but little effort has been spent on setup, configuration or documentation. The current goal is to:
 
 * Use it and evaluate:
-  * If the algorithm works as expected
-  * What needs improvement (false-positives etc)
-  * If the Hold and Press behavior becomes natural over time
-  * If the key bindings are good enough or need modifications.
+    * ~~If the algorithm works as expected~~. Yes it does.
+    * What needs improvement (false-positives etc)
+        * Some false positives seem to occur. Need better stat tools to determine which and what to do.
+    * ~~If the Hold and Press behavior becomes natural over time~~. Yes it does.
+    * If the key bindings are good enough or need modifications.
+        * Could use a bit more work. Not all symbols are mapped.
+* Clean up the code.
 * Write a Windows or arduino port so I can use it everywhere.
+
 
 
 
@@ -68,9 +82,9 @@ The main goal is to avoid repetitive strain injuries (RSI) for heavy keyboard us
 
 Inspiration for the keyboard layout came from both ergonomic keyboards such as the [Kinesis Advantage](https://www.kinesis-ergo.com/shop/advantage2/) where the thumb is used for many modifier keys and ergonomic keyboard layouts such as [Neo](https://neo-layout.org/index_en.html) which use multiple modifiers to access more keys from the home row.
 
-The disadvantage with large ergonomic keyboards is that they make my laptop much less portable and the disadvantage with most keyboard layouts is that they all keep the unergonomic positions of many frequently used keys such as `CONTROL`, `SHIFT`, `DELETE` etc.
+The disadvantage with most ergonomic keyboards is that they are large and not laptop friendly. The disadvantage with most keyboard layouts is that they are not radical enough and keep the unergonomic positions of many frequently used keys such as `CONTROL`, `SHIFT`, `DELETE` etc.
 
-My main goals with Hopr are:
+My main goals with HoPR are:
 
 * Ergonomic usage. Reduce use of little finger and hand movements in general to minimize the risk of RSI.
 * Transparent usage. All keys should also work as normal. No change in default layout or use. 
@@ -112,7 +126,7 @@ This approach gives your own user the right to read and write key events. This i
 
 ### Setup with hopr user
 
-To avoid giving read and write permissions to your own user, create a new user and follow the steps above to give it the proper permissions. Then run the program as the new user. This is the safest way to run the program since your logged in user does not have the right to read or write keyboard events.
+To avoid giving read and write permissions to your own user, create a new user and follow the steps above to give it the proper permissions. Then run the program as the new user. This is the safest way to run the program since your normal user does not have the right to read or write keyboard events.
 
 See [create_hopr_user.example](script/misc/create_hopr_user.example) for an example.
 
