@@ -1,9 +1,11 @@
 ! ToDo
 
 !! Prio 1
+# Does not work in Ubuntu 18.04. Fix.
 # Remove obsolete hopr/v04 directory.
 # Mocking does not suppress stdout when running as hopr user.
 test25_missing_key_map (hopr.v04.test_eventparser.Test1EventParser) ... Unknown chord: ['X', 'A']
+nosetests -sv
 
 # Caps lock bug: Caps lock can be activated permanently by press shift, press caps lock, release shift release caps lock
 
