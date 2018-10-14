@@ -21,7 +21,7 @@ from pprint import pprint
 
 import evdev as ed
 
-from hopr.backend.evdev import read_events
+from hopr.backend.linuxevdev import read_events
 
 def match_any(name, patterns):
     if not patterns:

@@ -42,8 +42,14 @@ class GrabDevices(object):
 grab = GrabDevices
 
 def is_physical_keyboard(dev):
+    
     if not dev.phys:
         # Only physical devices
+        # NOTE: In Ubuntu 18.04, py-evdev-uinput registers as a physical device. Insufficient.
+        return False
+    
+    # TODO: Improve handling. How to distinguish physical keyboard from uinput safely?
+    if dev.name.find('uinput') >= 0:
         return False
 
     # Does the device have key events?
@@ -52,6 +58,7 @@ def is_physical_keyboard(dev):
         return False
 
     # Does the device have A-Z key events? (Not just numeric keyboard)
+    # TODO: Perhaps grab numerical keypad as well (?) to allow key pad chords.
     keys = c[e.EV_KEY]
     if (e.KEY_A not in keys
         or e.KEY_Z not in keys):
@@ -61,6 +68,7 @@ def is_physical_keyboard(dev):
 
 
 def find_keyboards():
+    # TODO: Make sure uinput device is NOT returned. Should perhaps device so it can be excluded. Or, create/list devices at the same time.
     keyboards = []
     for fn in list_devices():
         dev = InputDevice(fn)

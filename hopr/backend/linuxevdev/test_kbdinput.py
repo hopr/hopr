@@ -17,6 +17,8 @@
 
 
 import unittest as ut
+
+from evdev import UInput
 from kbdinput import *
 
 class Tests(ut.TestCase):
@@ -24,6 +26,13 @@ class Tests(ut.TestCase):
     def test1_find_keyboards(self):
         kbds = find_keyboards()
         self.assert_(len(kbds) >= 1)
+
+    def test2_uinput_not_in_keyboards(self):
+        with UInput() as ui:
+            kbds = find_keyboards()
+            devices = set([k.fn for k in kbds])
+            self.assert_(ui.device.fn not in devices, 'UInput must not be listed as keyboard')
+
 
     def test2_read_key_press_release(self):
         # TODO: Implement tests.

@@ -1,7 +1,10 @@
 ! ToDo
 
 !! Prio 1
-# Does not work in Ubuntu 18.04. Fix.
+# Configuration file.
+## Set keyboard pattern. How to detect and grab the correct keyboard.
+# backends: Single function for creating virtual keyboard and returning list of physical keyboards.
+## Makes it easier to prevent accidental inclusion of virtual keyboard in physical list.
 # Remove obsolete hopr/v04 directory.
 # Mocking does not suppress stdout when running as hopr user.
 test25_missing_key_map (hopr.v04.test_eventparser.Test1EventParser) ... Unknown chord: ['X', 'A']
@@ -25,6 +28,7 @@ nosetests -sv
 # Convert notes.txt to md or rst
 
 !! Prio 2
+# Review permissions for hopr user.
 
 * Merge args and config
 # Set keyboard devide /dev/input/event* or keyboard matching pattern in config.
