@@ -15,12 +15,14 @@
 # You should have received a copy of the GNU General Public License
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
+from builtins import object
 import evdev
 print(evdev.__file__)
 
 from evdev import ecodes
-import keycode
-import etype
+from . import keycode
+from . import etype
 
 def pretty_key(code):
     if code is None:

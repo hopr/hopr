@@ -15,5 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
-from main import main
+from __future__ import absolute_import
+from .main import main
 main()

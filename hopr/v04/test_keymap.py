@@ -16,10 +16,11 @@
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from __future__ import absolute_import
 import unittest as ut
 from hopr.tool.tools import pretty_key
 
-from keymap import KeyMap
+from .keymap import KeyMap
 
 class Tests(ut.TestCase):
     def setUp(self):

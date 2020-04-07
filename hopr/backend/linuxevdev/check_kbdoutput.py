@@ -15,9 +15,10 @@
 # You should have received a copy of the GNU General Public License
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
 from evdev import ecodes
 from time import sleep
-from kbdoutput import make_virtual_kbd
+from .kbdoutput import make_virtual_kbd
 
 def run():
     with make_virtual_kbd() as kbd:

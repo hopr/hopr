@@ -17,6 +17,8 @@
 
 
 
+from past.builtins import basestring
+from builtins import object
 PRESS = 'PRESS'
 RELEASE = 'RELEASE'
 HOLD = 'HOLD'

@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
+from past.builtins import basestring
 import string
 from pprint import pprint
 import subprocess
@@ -146,7 +147,7 @@ def pretty_key(key):
 def fix_layers(layers, symbols):
     # HACK: Make layers look like old layers structure.
     x = defaultdict(dict)
-    for ((chord_mods, chord_key), key_combo) in layers.items():
+    for ((chord_mods, chord_key), key_combo) in list(layers.items()):
         assert len(chord_mods) <= 1 # TODO: Only single key allowed for now
         if chord_mods:
             (chord_mod,) = chord_mods
@@ -174,7 +175,7 @@ def get_layer(layers, keys):
     # print(keys)
     assert is_mapped
 
-    layer =  dict((key, pretty_key(value)) for key,value in layer.items())
+    layer =  dict((key, pretty_key(value)) for key,value in list(layer.items()))
     # pprint(layer)
     return layer
 

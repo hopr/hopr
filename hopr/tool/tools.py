@@ -16,6 +16,7 @@
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from past.builtins import basestring
 import yaml
 from pprint import pprint
 from collections import namedtuple

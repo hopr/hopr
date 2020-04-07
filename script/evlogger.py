@@ -16,10 +16,16 @@
 # You should have received a copy of the GNU General Public License
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import range
+from past.builtins import basestring
+from builtins import object
 import csv
 import sys
 
-from cPickle import dump, load
+from pickle import dump, load
 from collections import defaultdict
 from evdev import ecodes as e
 
@@ -83,13 +89,13 @@ def tuplify(x):
 
 def save_ngrams(filename, ngrams):
     n_ngrams = len(ngrams)
-    n_event = sum([n for _,n in ngrams.items()])
+    n_event = sum([n for _,n in list(ngrams.items())])
     logging.info('Saving: {filename} n-grams: {n_ngrams} event_count: {n_event}'.format(**locals()))
     
     key_header = None
     with SaveFile(filename) as f:
         w = csv.writer(f.file)
-        for (keys, values) in ngrams.items():
+        for (keys, values) in list(ngrams.items()):
             keys = tuplify(keys)
             values = tuplify(values)
 
@@ -102,7 +108,7 @@ def save_ngrams(filename, ngrams):
 
 
 def save_csv(filename, log):
-    for (tag, sublog) in log.items():
+    for (tag, sublog) in list(log.items()):
         save_ngrams(filename + '.' + tag, sublog)
 
 def empty_sublog():
@@ -115,7 +121,7 @@ def load_ngrams(filename):
     ngrams = empty_sublog()
     
     reader = csv.reader(open(filename, 'rb'))
-    header = reader.next()
+    header = next(reader)
     assert header[-1] == 'value'
     
     n = len(header) - 1
@@ -138,7 +144,7 @@ def load_pickle(filename):
 
         
 def save_pickle(filename, log):
-    logging.info('Saving log: {}'.format(dict((key, len(value)) for key,value in log.items())))
+    logging.info('Saving log: {}'.format(dict((key, len(value)) for key,value in list(log.items()))))
     with SaveFile(filename) as f:
         dump(log, f.file, protocol=2)
 
@@ -179,7 +185,7 @@ def start(filename, save_interval):
                     append(press, key_name(ev.code))
                     log['PRESS2'][tuple(press)] += 1
                 
-    except KeyboardInterrupt, SystemExit:
+    except KeyboardInterrupt as SystemExit:
         logging.info('Quitting. Saving log')
         save_log(filename, log)
     except Exception as exc:
@@ -193,7 +199,7 @@ def view(filename):
     x = load_log(filename)
 
     events = {}
-    for ((code, value), count) in x['event'].items():
+    for ((code, value), count) in list(x['event'].items()):
         key = '{}={}'.format(key_name(code), value)
         events[key] = count
 
@@ -201,7 +207,7 @@ def view(filename):
     pprint(events)
 
     press = {}    
-    for ((code1, code2), count) in x['press2'].items():
+    for ((code1, code2), count) in list(x['press2'].items()):
         key = '{},{}'.format(key_name(code1), key_name(code2))
         press[key] = count
 
@@ -234,7 +240,7 @@ def summary(filename, top):
 
     press = []
     hold = []
-    for ((code, value), count) in x['event'].items():
+    for ((code, value), count) in list(x['event'].items()):
         if value == etype.KEY_PRESS:
             press.append((count, key_name(code)))
         elif value == etype.KEY_HOLD:
@@ -247,7 +253,7 @@ def summary(filename, top):
     pprint(sorted(hold, reverse=True)[:top])
 
     press2 = []
-    for ((code1, code2), count) in x['press2'].items():
+    for ((code1, code2), count) in list(x['press2'].items()):
         # TODO: Option. Ignore repeated key presses.
         if code1 != code2:
             key = '{},{}'.format(key_name(code1), key_name(code2))

@@ -17,9 +17,9 @@
 
 # evdev event type values
 from evdev import ecodes
-KEY_RELEASE = 0L
-KEY_PRESS = 1L
-KEY_HOLD = 2L
+KEY_RELEASE = 0
+KEY_PRESS = 1
+KEY_HOLD = 2
 
 _name = {KEY_PRESS: 'PRESS',
          KEY_RELEASE: 'RELEASE',
@@ -29,7 +29,7 @@ _name = {KEY_PRESS: 'PRESS',
 def name(code):
     return _name[code]
 
-_code = dict((name, code) for (code, name) in _name.items())
+_code = dict((name, code) for (code, name) in list(_name.items()))
 
 def code(name):
     return _code[name]

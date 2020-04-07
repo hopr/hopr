@@ -18,6 +18,7 @@
 
 
 # TODO: Rename. KeyMap vs key_map.
+from builtins import object
 class KeyMap(object):
     def __init__(self,
                  modifiers,

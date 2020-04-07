@@ -16,6 +16,8 @@
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from builtins import str
+from past.builtins import basestring
 import os
 import yaml
 from pprint import pprint
@@ -31,14 +33,14 @@ def parse_layers(layers, symbols, key_names):
     The map is a dictionary from a key chord ((mods), key) to a key combination ((mods), key)
     """
     key_map = {}
-    for (chord_mod, layer) in layers.items():
+    for (chord_mod, layer) in list(layers.items()):
 
         if chord_mod:
             chord_mod = parse_key_combo(chord_mod, key_names)
         else:
             chord_mod = ()
             
-        for (chord_key, key_combo) in layer.items():
+        for (chord_key, key_combo) in list(layer.items()):
             chord_key = parse_key(chord_key, key_names)
 
             # TODO: Symbols can only be used in layer definitions. Fix
@@ -59,7 +61,7 @@ def parse_layers(layers, symbols, key_names):
 def parse_modifiers(modifiers):
     # Make sure all is uppercased
     # TODO: Use only upper or lower case everywhere...
-    return dict((k.upper(), v.upper()) for (k,v) in modifiers.items() if v.strip())
+    return dict((k.upper(), v.upper()) for (k,v) in list(modifiers.items()) if v.strip())
 
 def unalias(key, aliases):
     if key in aliases:
@@ -72,7 +74,7 @@ def format_kwargs(kwargs):
 
 class ParseError(Exception):
     def __init__(self, msg, **kwargs):
-        self.message = unicode(msg)
+        self.message = str(msg)
         
         self.info = []
         self.add_info(**kwargs)
@@ -91,7 +93,7 @@ def assert_key_name(key, names):
     
 def assert_(predicate, *args, **kwargs):
     if not predicate:
-        params = [str(a) for a in args] + ['{}={}'.format(k,v) for k,v in kwargs.items()]
+        params = [str(a) for a in args] + ['{}={}'.format(k,v) for k,v in list(kwargs.items())]
         msg = '\n'.join(params)
         raise ValueError(msg)
 
@@ -122,7 +124,7 @@ def parse_passthrough(keys, key_names):
 
 def parse_key_dict(dictionary, key_names):
     # Parse dictionary with key -> key combo items 
-    return dict((parse_key(k, key_names), parse_key_combo(v, key_names)) for k,v in dictionary.items())
+    return dict((parse_key(k, key_names), parse_key_combo(v, key_names)) for k,v in list(dictionary.items()))
 
 
 KeyBindings = namedtuple('KeyBindings', 'layers on_off passthrough modifiers'.lower().split())
@@ -151,7 +153,7 @@ KeyboardLayout = namedtuple('KeyboardLayout', 'symbols'.lower().split())
 def load_keyboard_layout(path, key_names):
     try:
         x = yaml.load(open(path, 'rb'))
-        symbols = dict((k, parse_key_combo(v, key_names, info=dict(symbol=k))) for (k,v) in x['symbols'].items())
+        symbols = dict((k, parse_key_combo(v, key_names, info=dict(symbol=k))) for (k,v) in list(x['symbols'].items()))
     except ParseError as e:
         e.add_info(path=path)
         raise e

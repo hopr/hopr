@@ -16,6 +16,7 @@
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from builtins import object
 import logging
 from select import select
 from evdev import list_devices, ecodes as e, InputDevice
@@ -105,7 +106,7 @@ def read_events(devices,
                             yield (devices[fd], event)
                         
     except KeyboardInterrupt:
-        for dev in devices.values():
+        for dev in list(devices.values()):
             dev.close()
         raise
             

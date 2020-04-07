@@ -16,10 +16,12 @@
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from __future__ import absolute_import
+from builtins import str
 import unittest as ut
 
 
-from mockevent import *
+from .mockevent import *
 
 class Tests(ut.TestCase):
     def test1_event(self):

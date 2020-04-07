@@ -16,11 +16,12 @@
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from __future__ import absolute_import
 import unittest as ut
 import evdev.ecodes as e
 from mock import patch
 
-import etype
+from . import etype
 
 from hopr.backend.linuxevdev.kbdoutput import *
 

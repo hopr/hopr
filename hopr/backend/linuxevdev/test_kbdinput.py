@@ -16,10 +16,11 @@
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from __future__ import absolute_import
 import unittest as ut
 
 from evdev import UInput
-from kbdinput import *
+from .kbdinput import *
 
 class Tests(ut.TestCase):
     # TODO: NOTE: Need read permissions on /dev/input/* to work

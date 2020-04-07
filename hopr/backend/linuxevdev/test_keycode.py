@@ -16,10 +16,12 @@
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from __future__ import absolute_import
+from past.builtins import basestring
 import unittest as ut
 from evdev import ecodes
 
-from keycode import *
+from .keycode import *
 
 class Tests(ut.TestCase):
     def test1_name(self):
@@ -36,7 +38,7 @@ class Tests(ut.TestCase):
         self.assertEqual(ecodes.KEY_LEFTSHIFT, keycode('leftShift'))
 
     def test3_roundtrip(self):
-        for (ename, code) in ecodes.ecodes.items():
+        for (ename, code) in list(ecodes.ecodes.items()):
             try:
                 if (ename.startswith('KEY_')
                     # HACK: KEY_CNT and KEY_MAX are special

@@ -16,13 +16,14 @@
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from __future__ import absolute_import
 import unittest as ut
 import tempfile
 
 from mock import MagicMock, sentinel, call
 
 
-from run import *  # Run, parse_args, run
+from .run import *  # Run, parse_args, run
 
 
 # TODO: Suppress log output during tests.
@@ -101,7 +102,7 @@ class TestRun(ut.TestCase):
                       read_events=MagicMock(name='read_events'),
                       grab_keyboards=MagicMock(name='grab_keyboards'))
         
-        for k,v in params.items():
+        for k,v in list(params.items()):
             setattr(self, k, v)
 
         self.run = partial(run, **params)

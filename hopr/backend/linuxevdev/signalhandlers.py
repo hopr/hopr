@@ -3,7 +3,7 @@ import signal
 
 import logging
 
-signal_name = dict((v,k) for k,v in vars(signal).items() if k.startswith('SIG'))
+signal_name = dict((v,k) for k,v in list(vars(signal).items()) if k.startswith('SIG'))
 
 def exit_on_signal(sig, frame):
     msg = 'Caught signal {}={}. Exiting...'.format(signal_name[sig], sig)

@@ -16,10 +16,11 @@
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from __future__ import absolute_import
 import unittest as ut
  
-from tools import pretty_key
-from config import *
+from .tools import pretty_key
+from .config import *
 
 # TODO: HACK: Use __file__ to find config directory. Improve.
 base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir, os.path.pardir))
@@ -142,7 +143,7 @@ class TestModifiers(ut.TestCase):
 
 
 def check_layers(layers, key_names):
-    for kmap in layers.items():
+    for kmap in list(layers.items()):
         (from_mods, from_key), (to_mods, to_key) = kmap
         for key in (from_key, to_key) + from_mods + to_mods:
             if key not in key_names:

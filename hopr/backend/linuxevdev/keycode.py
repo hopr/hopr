@@ -17,6 +17,7 @@
 
 
 
+from past.builtins import basestring
 import evdev.ecodes as e
 
 def evdev_name(name):

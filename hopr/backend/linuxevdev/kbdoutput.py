@@ -16,11 +16,13 @@
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from __future__ import absolute_import
+from builtins import object
 from evdev import UInput, ecodes as e
 import logging
 
-import etype
-from keycode import keycode
+from . import etype
+from .keycode import keycode
 
 def to_str(ui):
     # NOTE: Some kind of error with str when using Ubuntu 16.04. ui not open when using ui.capabilities

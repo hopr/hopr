@@ -17,8 +17,9 @@
 
 
 # TODO: Reconsider
-from eventparser import EventParser
-from keymap import KeyMap
+from __future__ import absolute_import
+from .eventparser import EventParser
+from .keymap import KeyMap
 
 def make_eventparser(cfg, output_kbd):
 

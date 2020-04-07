@@ -16,10 +16,11 @@
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from __future__ import absolute_import
 import unittest as ut
 from pprint import pprint
  
-from tools import *
+from .tools import *
 
 class Tests(ut.TestCase):
     def test11_single_key(self):

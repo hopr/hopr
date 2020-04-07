@@ -16,6 +16,9 @@
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from __future__ import absolute_import
+from builtins import str
+from builtins import object
 import os
 import sys
 import argparse
@@ -25,7 +28,7 @@ from contextlib import contextmanager
 from time import time
 from pprint import pprint
 
-import config
+from . import config
 
 class Timeout(object):
     def __init__(self, t):

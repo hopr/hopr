@@ -16,11 +16,13 @@
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from __future__ import absolute_import
+from builtins import str
 import unittest as ut
 from evdev import ecodes as e, InputEvent
 
-import etype
-from event import *
+from . import etype
+from .event import *
 
 class Tests(ut.TestCase):
     def test(self):
