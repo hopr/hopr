@@ -17,6 +17,7 @@ adduser hopr uinput
 # Give hopr read permissions to the code. Either by adding a group or setting read flags.
 # Also, make sure the PYTHONPATH is correct etc
 
+# Test with: sudo -u hopr python3 uinput_demo.py
 
 
 

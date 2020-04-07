@@ -18,9 +18,9 @@
 import evdev
 from evdev import ecodes
 
-KEY_RELEASE = 0L
-KEY_PRESS = 1L
-KEY_HOLD = 2L
+KEY_RELEASE = 0
+KEY_PRESS = 1
+KEY_HOLD = 2
 
 def write_key(ui, key):
     name = 'KEY_' + key.upper()
