@@ -16,5 +16,10 @@
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import absolute_import
+
+# TODO: Remove HACK: Add current dir to path.
+import sys, os
+sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
+
 from hopr.main import main
 main()

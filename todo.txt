@@ -1,6 +1,10 @@
 ! ToDo
 
 !! Prio 1
+# Multiple GPL license headers in many files
+# Unittest warnings. Clean up.
+# Remove python2 compatibility stuff (basestring __future__ etc)
+
 # Configuration file.
 ## Set keyboard pattern. How to detect and grab the correct keyboard.
 # backends: Single function for creating virtual keyboard and returning list of physical keyboards.
@@ -9,6 +13,8 @@
 # Mocking does not suppress stdout when running as hopr user.
 test25_missing_key_map (hopr.v04.test_eventparser.Test1EventParser) ... Unknown chord: ['X', 'A']
 nosetests -sv
+
+# Proper installation stuff. Do not add path in main.py etc.
 
 # Caps lock bug: Caps lock can be activated permanently by press shift, press caps lock, release shift release caps lock
 

@@ -1,6 +1,0 @@
-#!/bin/bash
-scriptdir=$(dirname `realpath $0`)
-pkexec bash "$scriptdir/set_device_permissions.sh"
-xfce4-terminal -H -x bash -i -c "python $scriptdir/../hopr -x"
-
-
