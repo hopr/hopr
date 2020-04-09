@@ -129,6 +129,6 @@ Set read and write permissions for all on on `/dev/uinput` and `/dev/input/event
    
 Then, run the program by executing:
 
-    python3 <path to installation directory>/hopr/main.py
+    python3 <path to installation directory>/hopr
 
 
