@@ -1,15 +1,17 @@
-# HoPR - Hold and Press keyboard shortcuts
-Map Hold and Press key events to any other combination of key events.
+# HoPr - Hold and Press keyboard shortcuts
+Map Hold-and-Press key events to any other combination of key events.
 
 Examples:
 
-    Hold SPACE and the right hand is used for movement (arrow keys, page up etc)
-    Hold D and the right hand can type symbols like parenthesis, brackets and braces.
+    Hold SPACE and the right hand is used for cursor movement (arrow keys, page up etc)
+    Hold D and the right hand can type symbols like parenthesis (), brackets [] and braces {}.
     Hold S and the right hand can be used as a numerical keyboard.
-    Hold F or J are alternatives for left and right Shift
+    Hold F or J instead of left and right Shift
+
+Normal typing is not affected. Just typing F,D or S normally still works as expected.
 
 ## What is it?
-HoPR is an attempt at creating a more ergonomic keyboard experience by mapping hard to reach keys to special key combinations accessible from the home row. It does this by distinguishing between ordinary typing where keys are pressed sequentially and special hold-and-press events (chords) where the first key is held and the second key is released before the first. 
+HoPr creates a more ergonomic keyboard experience by mapping hard to reach keys to special key combinations accessible from the home row. It does this by distinguishing between ordinary typing where keys are pressed sequentially and special hold-and-press events (chords) where the first key is held and the second key is released before the first. 
 
 The main goal is to reduce stress on the hands and weaker fingers by moving hard to reach keys and key combinations to central positions. All common keyboard actions such as movement, editing, typing etc can be reached without leaving the home row and without stretching the hand too much. For example:
 
