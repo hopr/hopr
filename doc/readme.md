@@ -98,22 +98,8 @@ There is no installer or setup yet. You can test it by downloading the source an
 ### Dependencies
 The program depends on pyyaml and python evdev 
 
-    apt-get install python-evdev python-yaml
+    apt-get install python3-evdev python3-yaml
 
-### Quick and Dirty Setup
-
-**Do NOT do this on a multi-user machine or a machine that you do not fully control**
-
-This adds read and write permissions for everyone on all input devices. This is not safe on a multi user machine since any user can read your keyboard input.
-
-Set read and write permissions for all on on `/dev/uinput` and `/dev/input/event*`
-
-    chmod +0006 /dev/input/event*
-    chmod +0006 /dev/uinput
-   
-Then, run the program by executing:
-
-    python <path to installation directory>/hopr/main.py
 
 ### Setup with group permissions
 
@@ -129,5 +115,20 @@ This approach gives your own user the right to read and write key events. This i
 To avoid giving read and write permissions to your own user, create a new user and follow the steps above to give it the proper permissions. Then run the program as the new user. This is the safest way to run the program since your normal user does not have the right to read or write keyboard events.
 
 See [create_hopr_user.example](script/misc/create_hopr_user.example) for an example.
+
+### Quick and Dirty Setup
+
+**Do NOT do this on a multi-user machine or a machine that you do not fully control**
+
+This adds read and write permissions for everyone on all input devices. This is not safe on a multi user machine since any user can read your keyboard input.
+
+Set read and write permissions for all on on `/dev/uinput` and `/dev/input/event*`
+
+    chmod +0006 /dev/input/event*
+    chmod +0006 /dev/uinput
+   
+Then, run the program by executing:
+
+    python3 <path to installation directory>/hopr/main.py
 
 
