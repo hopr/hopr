@@ -28,7 +28,7 @@ from contextlib import contextmanager
 from time import time
 from pprint import pprint
 
-from . import config
+from hopr.tool import config
 
 class Timeout(object):
     def __init__(self, t):
@@ -150,13 +150,6 @@ def setup_logging(log_file,
         
         log.info('Logging to ' + log_file)
 
-def base_dir():
-    # TODO: HACK: base_dir depends on location of current file. Unstable.
-    return os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir, os.path.pardir))    
-
-def default_config_dir():
-    return os.path.join(base_dir(), 'config')
-
 def run_parse_args(backend,
                    make_eventparser,
                    args):
@@ -166,7 +159,7 @@ def run_parse_args(backend,
                   log_level=args.log_level)
         
     try:
-        config_dir = args.config_dir or default_config_dir()
+        config_dir = args.config_dir or config.default_config_dir()
         # TODO: Merge args and config
         cfg = config.load_config(config_dir)
         

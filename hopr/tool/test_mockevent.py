@@ -21,7 +21,7 @@ from builtins import str
 import unittest as ut
 
 
-from .mockevent import *
+from hopr.tool.mockevent import *
 
 class Tests(ut.TestCase):
     def test1_event(self):

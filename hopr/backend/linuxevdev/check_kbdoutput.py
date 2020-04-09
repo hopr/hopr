@@ -18,7 +18,7 @@
 from __future__ import absolute_import
 from evdev import ecodes
 from time import sleep
-from .kbdoutput import make_virtual_kbd
+from hopr.backend.linuxevdev.kbdoutput import make_virtual_kbd
 
 def run():
     with make_virtual_kbd() as kbd:

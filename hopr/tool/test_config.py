@@ -19,12 +19,12 @@
 from __future__ import absolute_import
 import unittest as ut
  
-from .tools import pretty_key
-from .config import *
+from hopr.tool.tools import pretty_key
+from hopr.tool.config import *
 
 # TODO: HACK: Use __file__ to find config directory. Improve.
-base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir, os.path.pardir))
-config_dir = os.path.join(base_dir, 'config')
+# base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir, os.path.pardir))
+# config_dir = os.path.join(base_dir, 'config')
 
 
 # TODO: Clean up notation. Symbols vs keys etc. Physical keys vs symbols/characters.
@@ -154,41 +154,41 @@ def check_layers(layers, key_names):
 import os
 class TestConfig(ut.TestCase):
     def setUp(self):
-        self.config = load_config(config_dir)
+        self.config = load_config(default_config_dir())
 
     def test10_key_names(self):
         a = self.config.key_names
-        self.assert_(isinstance(a.names, set))
-        self.assert_('LEFTSHIFT' in a.names)
+        self.assertTrue(isinstance(a.names, set))
+        self.assertTrue('LEFTSHIFT' in a.names)
         
-        self.assert_(isinstance(a.aliases, dict))
+        self.assertTrue(isinstance(a.aliases, dict))
         self.assertEqual(a.aliases['SHIFT'], 'LEFTSHIFT')
 
 
     def test11_layout(self):
         a = self.config.keyboard_layout
-        self.assert_(type(a.symbols) is dict)
+        self.assertTrue(type(a.symbols) is dict)
         # TODO: ??? Format does not match layer definitions: (<mods tuple>, <key>)
         self.assertEqual(a.symbols['('], ('LEFTSHIFT', '8'))
 
 
     def test12_load_keybindings(self):
         a = self.config.key_bindings
-        self.assert_(type(a.layers) is dict)
+        self.assertTrue(type(a.layers) is dict)
         self.assertEqual(((), 'DOWN'), a.layers[(('SPACE',), 'J')])
         self.assertEqual((('LEFTSHIFT',), '8'), a.layers[(('D',), 'J')])
         
-        self.assert_(type(a.modifiers) is dict)
+        self.assertTrue(type(a.modifiers) is dict)
         self.assertEqual(a.modifiers['F'], ('LEFTSHIFT',))
         
-        self.assert_(type(a.passthrough) is set)
-        self.assert_('LEFTSHIFT' in a.passthrough)
+        self.assertTrue(type(a.passthrough) is set)
+        self.assertTrue('LEFTSHIFT' in a.passthrough)
         
-        self.assert_(type(a.on_off) is str)
+        self.assertTrue(type(a.on_off) is str)
 
     def test3_load_app_config(self):
         a = self.config.app
-        self.assert_(isinstance(a.send_unknown_chord, bool))
+        self.assertTrue(isinstance(a.send_unknown_chord, bool))
 
 
 

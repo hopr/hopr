@@ -20,7 +20,7 @@ from __future__ import absolute_import
 import unittest as ut
 from hopr.tool.tools import pretty_key
 
-from .keymap import KeyMap
+from hopr.v04.keymap import KeyMap
 
 class Tests(ut.TestCase):
     def setUp(self):

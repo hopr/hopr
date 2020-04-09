@@ -20,19 +20,19 @@ from __future__ import absolute_import
 import unittest as ut
 
 from evdev import UInput
-from .kbdinput import *
+from hopr.backend.linuxevdev.kbdinput import *
 
 class Tests(ut.TestCase):
     # TODO: NOTE: Need read permissions on /dev/input/* to work
     def test1_find_keyboards(self):
         kbds = find_keyboards()
-        self.assert_(len(kbds) >= 1)
+        self.assertTrue(len(kbds) >= 1)
 
     def test2_uinput_not_in_keyboards(self):
         with UInput() as ui:
             kbds = find_keyboards()
-            devices = set([k.fn for k in kbds])
-            self.assert_(ui.device.fn not in devices, 'UInput must not be listed as keyboard')
+            devices = set([k.path for k in kbds])
+            self.assertTrue(ui.device.path not in devices, 'UInput must not be listed as keyboard')
 
 
     def test2_read_key_press_release(self):

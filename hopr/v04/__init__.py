@@ -18,8 +18,8 @@
 
 # TODO: Reconsider
 from __future__ import absolute_import
-from .eventparser import EventParser
-from .keymap import KeyMap
+from hopr.v04.eventparser import EventParser
+from hopr.v04.keymap import KeyMap
 
 def make_eventparser(cfg, output_kbd):
 

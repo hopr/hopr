@@ -18,9 +18,9 @@
 
 
 from __future__ import absolute_import
-from .event import Event
-from .etype import is_press, is_release
+from hopr.backend.linuxevdev.event import Event
+from hopr.backend.linuxevdev.etype import is_press, is_release
 # TODO: Rename to devices?
-from .kbdinput import find_keyboards, grab, read_events
-from .kbdoutput import make_virtual_kbd
-from .signalhandlers import register_signal_handlers
+from hopr.backend.linuxevdev.kbdinput import find_keyboards, grab, read_events
+from hopr.backend.linuxevdev.kbdoutput import make_virtual_kbd
+from hopr.backend.linuxevdev.signalhandlers import register_signal_handlers

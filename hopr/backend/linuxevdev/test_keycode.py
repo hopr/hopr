@@ -21,7 +21,7 @@ from past.builtins import basestring
 import unittest as ut
 from evdev import ecodes
 
-from .keycode import *
+from hopr.backend.linuxevdev.keycode import *
 
 class Tests(ut.TestCase):
     def test1_name(self):

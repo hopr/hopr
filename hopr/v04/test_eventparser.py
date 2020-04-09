@@ -24,7 +24,7 @@ import mock
 from hopr.tool.mockevent import Event, parse_events
 from hopr.v04.eventparser import EventParser, logging
 
-from .keymap import KeyMap
+from hopr.v04.keymap import KeyMap
 from hopr.tool.tools import pretty_key
 
 def return_released_key(pressed_keys, released_index):

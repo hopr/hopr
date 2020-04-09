@@ -18,11 +18,11 @@
 from __future__ import absolute_import
 from builtins import object
 import evdev
-print(evdev.__file__)
+# print(evdev.__file__)
 
 from evdev import ecodes
-from . import keycode
-from . import etype
+from hopr.backend.linuxevdev import keycode
+from hopr.backend.linuxevdev import etype
 
 def pretty_key(code):
     if code is None:

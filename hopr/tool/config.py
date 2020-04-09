@@ -22,7 +22,13 @@ import os
 import yaml
 from pprint import pprint
 from collections import namedtuple
-        
+
+def base_dir():
+    # TODO: HACK: base_dir depends on location of current file. Unstable.
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))    
+
+def default_config_dir():
+    return os.path.join(base_dir(), 'config')
 
 # TODO: Mapping errors are not caught. Improve chord and key definitions.
 # TODO: Can not use symbols with modified key defs. I.e. meta+%
@@ -129,7 +135,7 @@ def parse_key_dict(dictionary, key_names):
 
 KeyBindings = namedtuple('KeyBindings', 'layers on_off passthrough modifiers'.lower().split())
 def load_key_bindings(path, symbols, key_names):
-    x = yaml.load(open(path, 'rb'))
+    x = yaml.safe_load(open(path, 'rb'))
     return KeyBindings(on_off=parse_key(x['on_off'], key_names),
                        passthrough=parse_passthrough(x['passthrough'], key_names),
                        modifiers=parse_key_dict(x['modifiers'], key_names),
@@ -140,7 +146,8 @@ def load_key_bindings(path, symbols, key_names):
 KeyNames = namedtuple('KeyNames', 'names aliases'.split())
 def load_key_names(path):
     # HACK: TODO: Reconsider setup and configuration. Should probably parse key combos and replacing aliases when loading configs.
-    aliases = yaml.load(open(path, 'rb').read().upper())['ALIAS']
+    txt = open(path, 'rb').read().upper()
+    aliases = yaml.safe_load(txt)['ALIAS']
     
     # HACK: For now, use evdev names without KEY_
     import evdev
@@ -152,7 +159,7 @@ def load_key_names(path):
 KeyboardLayout = namedtuple('KeyboardLayout', 'symbols'.lower().split())
 def load_keyboard_layout(path, key_names):
     try:
-        x = yaml.load(open(path, 'rb'))
+        x = yaml.safe_load(open(path, 'rb'))
         symbols = dict((k, parse_key_combo(v, key_names, info=dict(symbol=k))) for (k,v) in list(x['symbols'].items()))
     except ParseError as e:
         e.add_info(path=path)
@@ -162,7 +169,7 @@ def load_keyboard_layout(path, key_names):
 
 ApplicationConfig = namedtuple('ApplicationConfig', 'send_unknown_chord'.lower().split())
 def load_application(path):
-    app = yaml.load(open(path, 'rb'))
+    app = yaml.safe_load(open(path, 'rb'))
     return ApplicationConfig(**app)
 
 Config = namedtuple('Config', 'app key_names keyboard_layout key_bindings'.lower().split())

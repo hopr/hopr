@@ -35,9 +35,9 @@ from __future__ import absolute_import
 # You should have received a copy of the GNU General Public License
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
-from . import backend.linuxevdev as backend
-from .tool.run import run_parse_args
-from .v04 import make_eventparser
+from hopr import backend.linuxevdev as backend
+from hopr.tool.run import run_parse_args
+from hopr.v04 import make_eventparser
 
 def main():
     import sys

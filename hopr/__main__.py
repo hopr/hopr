@@ -16,5 +16,5 @@
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import absolute_import
-from .main import main
+from hopr.main import main
 main()

@@ -21,7 +21,7 @@ import unittest as ut
 import evdev.ecodes as e
 from mock import patch
 
-from . import etype
+from hopr.backend.linuxevdev import etype
 
 from hopr.backend.linuxevdev.kbdoutput import *
 

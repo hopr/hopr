@@ -21,8 +21,8 @@ from builtins import str
 import unittest as ut
 from evdev import ecodes as e, InputEvent
 
-from . import etype
-from .event import *
+from hopr.backend.linuxevdev import etype
+from hopr.backend.linuxevdev.event import *
 
 class Tests(ut.TestCase):
     def test(self):

@@ -23,7 +23,7 @@ import tempfile
 from mock import MagicMock, sentinel, call
 
 
-from .run import *  # Run, parse_args, run
+from hopr.tool.run import *  # Run, parse_args, run
 
 
 # TODO: Suppress log output during tests.
@@ -159,7 +159,7 @@ class TestRunFunction(ut.TestCase):
                        args=args)
 
     def test_log_file(self):
-        f = tempfile.NamedTemporaryFile()
+        f = tempfile.NamedTemporaryFile('r')
         backend = MagicMock(name='backend')
         make_eventparser = MagicMock(name='make_eventparser')
         args = ['--log-level', 'debug', '--log-file', f.name]
@@ -170,7 +170,7 @@ class TestRunFunction(ut.TestCase):
         logging.getLogger().debug('Test Message')
 
         text = f.read()
-        self.assert_(text.strip().endswith('Test Message'))
+        self.assertTrue(text.strip().endswith('Test Message'))
         
         
 
