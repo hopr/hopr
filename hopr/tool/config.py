@@ -16,8 +16,6 @@
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from builtins import str
-from past.builtins import basestring
 import os
 import yaml
 from pprint import pprint
@@ -105,7 +103,7 @@ def assert_(predicate, *args, **kwargs):
 
 
 def parse_key(key, key_names):
-    assert_(isinstance(key, basestring), unexpected_key=key)
+    assert_(isinstance(key, str), unexpected_key=key)
     key = unalias(key.upper(), key_names.aliases)
     assert_key_name(key, key_names.names)
     return key
@@ -113,7 +111,7 @@ def parse_key(key, key_names):
 def parse_key_combo(key_combo, key_names, info={}):
     """ Accept both ('a', 'b') notation and 'a+b' """
     
-    if isinstance(key_combo, basestring):
+    if isinstance(key_combo, str):
         key_combo = key_combo.split('+')
 
     try:
@@ -135,7 +133,9 @@ def parse_key_dict(dictionary, key_names):
 
 KeyBindings = namedtuple('KeyBindings', 'layers on_off passthrough modifiers'.lower().split())
 def load_key_bindings(path, symbols, key_names):
-    x = yaml.safe_load(open(path, 'rb'))
+    with open(path, 'rb') as f:
+        x = yaml.safe_load(f)
+        
     return KeyBindings(on_off=parse_key(x['on_off'], key_names),
                        passthrough=parse_passthrough(x['passthrough'], key_names),
                        modifiers=parse_key_dict(x['modifiers'], key_names),
@@ -146,7 +146,8 @@ def load_key_bindings(path, symbols, key_names):
 KeyNames = namedtuple('KeyNames', 'names aliases'.split())
 def load_key_names(path):
     # HACK: TODO: Reconsider setup and configuration. Should probably parse key combos and replacing aliases when loading configs.
-    txt = open(path, 'rb').read().upper()
+    with open(path, 'rb') as f:
+        txt = f.read().upper()
     aliases = yaml.safe_load(txt)['ALIAS']
     
     # HACK: For now, use evdev names without KEY_
@@ -159,7 +160,8 @@ def load_key_names(path):
 KeyboardLayout = namedtuple('KeyboardLayout', 'symbols'.lower().split())
 def load_keyboard_layout(path, key_names):
     try:
-        x = yaml.safe_load(open(path, 'rb'))
+        with open(path, 'rb') as f:
+            x = yaml.safe_load(f)
         symbols = dict((k, parse_key_combo(v, key_names, info=dict(symbol=k))) for (k,v) in list(x['symbols'].items()))
     except ParseError as e:
         e.add_info(path=path)
@@ -169,7 +171,8 @@ def load_keyboard_layout(path, key_names):
 
 ApplicationConfig = namedtuple('ApplicationConfig', 'send_unknown_chord'.lower().split())
 def load_application(path):
-    app = yaml.safe_load(open(path, 'rb'))
+    with open(path, 'rb') as f:
+        app = yaml.safe_load(f)
     return ApplicationConfig(**app)
 
 Config = namedtuple('Config', 'app key_names keyboard_layout key_bindings'.lower().split())

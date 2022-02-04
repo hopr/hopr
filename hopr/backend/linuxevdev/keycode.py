@@ -16,8 +16,6 @@
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
 
-
-from past.builtins import basestring
 import evdev.ecodes as e
 
 def evdev_name(name):
@@ -32,7 +30,7 @@ def keycode(name):
 def keyname(code):
     # HACK: key names are compatible with evdev key names
     name = e.keys[code]
-    if not isinstance(name, basestring):
+    if not isinstance(name, str):
         name = name[0]
 
     return name[4:].upper()

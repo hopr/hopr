@@ -1,6 +1,11 @@
 ! ToDo
 
 !! Prio 1
+
+
+# Remove "from __future__" imports and past.builtins etc
+# Better debugging. Move test scripts into hopr main 
+
 # Multiple GPL license headers in many files
 # Unittest warnings. Clean up.
 # Remove python2 compatibility stuff (basestring __future__ etc)

@@ -7,6 +7,10 @@
 adduser --group uinput
 cp 91_hopr.rules /etc/udev/rules.d
 
+# Reload udev rules
+udevadm control --reload-rules
+udevadm trigger
+
 # Double check /dev/input/event* already has group input.
 ls -al /dev/input/event*
 
@@ -15,7 +19,10 @@ adduser hopr input
 adduser hopr uinput
 
 # Give hopr read permissions to the code. Either by adding a group or setting read flags.
+# NOTE: Must set a+X permissions on all parent dirs
 # Also, make sure the PYTHONPATH is correct etc
+
+
 
 # Test with: sudo -u hopr python3 uinput_demo.py
 

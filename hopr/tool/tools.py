@@ -16,7 +16,6 @@
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from past.builtins import basestring
 import yaml
 from pprint import pprint
 from collections import namedtuple
@@ -27,7 +26,8 @@ def pretty_key(key):
     if not key:
         return None
 
-    if isinstance(key, basestring):
+    # TODO: REVIEW: is all this type checking necessary?
+    if isinstance(key, str):
         mods = ()
         key = key
     else:
@@ -36,7 +36,7 @@ def pretty_key(key):
         except:
             raise ValueError('Unexpected key definition: ' + repr(key))
 
-    if isinstance(mods, basestring):
+    if isinstance(mods, str):
         mods = (mods,)
 
     mods = tuple(sorted(m.upper() for m in mods))

@@ -16,7 +16,6 @@
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from __future__ import absolute_import
 import unittest as ut
 
 from evdev import UInput

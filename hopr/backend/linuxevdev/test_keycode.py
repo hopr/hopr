@@ -17,7 +17,6 @@
 
 
 from __future__ import absolute_import
-from past.builtins import basestring
 import unittest as ut
 from evdev import ecodes
 
@@ -44,7 +43,7 @@ class Tests(ut.TestCase):
                     # HACK: KEY_CNT and KEY_MAX are special
                     and not ename in 'KEY_CNT KEY_MAX'.split()
                     # Ignore keys with multiple names
-                    and isinstance(ecodes.keys[code], basestring)):                   
+                    and isinstance(ecodes.keys[code], str)):                   
                     name = ename[4:].upper()
                     self.assertEqual(code, keycode(name))
                     self.assertEqual(name, keyname(code))

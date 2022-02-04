@@ -17,7 +17,6 @@
 
 
 
-from past.builtins import basestring
 from builtins import object
 PRESS = 'PRESS'
 RELEASE = 'RELEASE'
@@ -67,7 +66,7 @@ def parse_events(s):
 
 
 def is_iterable(x):
-    if isinstance(x, basestring):
+    if isinstance(x, str):
         return False
     
     try:
@@ -82,7 +81,7 @@ def key_index(modifiers, key):
 
 
 def pretty_key(mods, key):
-    if isinstance(key, basestring):
+    if isinstance(key, str):
         return chord_index((), key)
 
     (modifiers, key) = key
