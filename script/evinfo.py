@@ -35,25 +35,25 @@ def match_any(name, patterns):
     return False
 
 def find_devices(include):
-    devices = set()
-    for fn in ed.list_devices():
-        dev = ed.InputDevice(fn)
+    devices = []
+    for path in ed.list_devices():
+        dev = ed.InputDevice(path)
 
         if not include:
-            devices.add(dev)
+            devices.append(dev)
         else:
             for match in include:
                 (key, pattern) = match.split('=')
                 text = str(getattr(dev, key))
                 if re.search(pattern, text, re.I):                
-                    devices.add(dev)
+                    devices.append(dev)
                 
-    return sorted(devices, key=lambda dev : dev.fn)
+    return sorted(devices, key=lambda dev : dev.path)
 
 
 def capabilities(include):
     for dev in find_devices(include):
-        print('{dev.fn} {dev.name}'.format(dev=dev))
+        print('{dev.path} {dev.name}'.format(dev=dev))
         pprint(dev.capabilities(True))
 
 def format_event(ev):
@@ -61,7 +61,7 @@ def format_event(ev):
 
 def read(include):
     for dev,ev in read_events(find_devices(include), return_device=True):
-        print('{} {}'.format(dev.fn, format_event(ev)))
+        print('{} {}'.format(dev.path, format_event(ev)))
 
 
 def list_devices(include, property):
@@ -82,11 +82,11 @@ def run(cmd, **kwargs):
 def run_parse_args(args):
     from argparse import ArgumentParser
     p = ArgumentParser()
-    p.add_argument('-i', '--include', action='append', help='Example: evinfo.py -i name=keyboard -i "fn=.*event1?"')
+    p.add_argument('-i', '--include', action='append', help='Example: evinfo.py -i name=keyboard -i "path=.*event1?"')
     
     sp = p.add_subparsers(dest='cmd')
     q = sp.add_parser('list_devices')
-    q.add_argument('-p', '--property', action='append', default='fn name info phys'.split())
+    q.add_argument('-p', '--property', action='append', default='path name info phys'.split())
     q = sp.add_parser('list_vars')
     q = sp.add_parser('capabilities')
     q = sp.add_parser('read')

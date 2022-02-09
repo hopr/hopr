@@ -16,12 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Hopr.  If not, see <http://www.gnu.org/licenses/>.
 
-from future import standard_library
-standard_library.install_aliases()
-from builtins import str
-from builtins import range
-from past.builtins import basestring
-from builtins import object
 import csv
 import sys
 
@@ -29,7 +23,7 @@ from pickle import dump, load
 from collections import defaultdict
 from evdev import ecodes as e
 
-from hopr.backend.evdev import find_keyboards, read_events, etype
+from hopr.backend.linuxevdev import find_keyboards, read_events, etype
 from time import time
 import os
 import logging
