@@ -75,6 +75,9 @@ def list_vars(include):
         pprint([x for x in dir(dev) if not x.startswith('_')])
 
 def run(cmd, **kwargs):
+    if not cmd:
+        return
+    
     f = globals()[cmd]
     f(**kwargs)
 
@@ -92,7 +95,12 @@ def run_parse_args(args):
     q = sp.add_parser('read')
     x = p.parse_args(args)
     # pprint(vars(x))
-    run(**vars(x))
+
+    if x.cmd:
+        run(**vars(x))
+    else:
+        p.print_help()
+
     
 
 if __name__ == "__main__":
