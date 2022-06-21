@@ -22,7 +22,11 @@ adduser hopr uinput
 # NOTE: Must set a+X permissions on all parent dirs
 # Also, make sure the PYTHONPATH is correct etc
 
+# Optionally, allow user to execute any command as hopr user.
+# visudo /etc/sudoers.d/91_hopr_nopwd
+## my_username ALL=(hopr) NOPASSWD: ALL
 
+# TODO: Restrict execution permission to single command.
 
 # Test with: sudo -u hopr python3 uinput_demo.py
 
